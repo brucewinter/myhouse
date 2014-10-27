@@ -20,7 +20,7 @@ definition(
     name: "MisterHouse State Update",
     namespace: "",
     author: "Bruce Winter",
-    description: "Sends device state changes to MisterHouse.  Example at http://misterhouse.blogspot.com/2014/10/track-the-cat.html",
+    description: "Sends device state changes to MisterHouse.  Example at http://misterhouse.blogspot.com/2014/10/track-cat.html",
     category: "",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
