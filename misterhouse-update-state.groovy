@@ -90,12 +90,14 @@ def initialize()
 
 def handler(evt) {
     log.debug "MisterHouse: $evt.displayName is $evt.value"
-    def mh_name = "$evt.displayName"
-    mh_name = mh_name.replaceAll(/ /, '_')
+    def mh_name  = "$evt.displayName"
+    def mh_value = "$evt.value"
+    mh_name  = mh_name.replaceAll(/ /, '_')
+    mh_value = mh_name.replaceAll(/ /, '%20')
 
     log.debug "MisterHouse: $mh_name  $evt.displayName is $evt.value"
      
-	def httpRequest = [method: "GET", path: "/SET?\$${mh_name}?$evt.value", headers: [HOST: "$ip_address", Accept: "*/*"]	]
+	def httpRequest = [method: "GET", path: "/SET?\$${mh_name}?$mh_value", headers: [HOST: "$ip_address", Accept: "*/*"]	]
 	sendHubCommand(new physicalgraph.device.HubAction(httpRequest))
  
  }
