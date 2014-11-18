@@ -147,7 +147,7 @@ if (new_minute) {
 }
 
 
-$p_get_power1 = new Process_Item("curl -s 'http://www.wattvision.com/api/download/latest?h=1590801&k=06bfd5b614900f6c&v=0.1' > $config_parms{data_dir}/web/get_power1.txt");
+$p_get_power1 = new Process_Item("curl -s 'http://www.wattvision.com/api/download/latest?h=1590801&k=$config_parms{wattvision_key}&v=0.1' > $config_parms{data_dir}/web/get_power1.txt");
 $p_get_power2 = new Process_Item("curl -s 'http://192.168.0.142/api/v1/production' > $config_parms{data_dir}/web/get_power2.txt");
 
 sub get_power {
