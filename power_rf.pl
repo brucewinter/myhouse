@@ -131,7 +131,7 @@ if (said $power_house_list2) {
 
 $power_house_list3 = new Voice_Cmd "Delete bad rf power meters";
 if (said $power_house_list3) {
-    my $json = `curl --silent --request GET --header 'X-ApiKey: P-wozCcE4zNvnj4uc8JdgPGP7uCSAKwybitrQ1dsZEVQYz0g' 'https://api.xively.com/v2/feeds/1037196380.json'`;
+    my $json = `curl --silent --request GET --header 'X-ApiKey: $config_parms{xively_key}' 'https://api.xively.com/v2/feeds/1037196380.json'`;
     my $p1 = decode_json $json if $json;
     for my $d (@{$$p1{datastreams}}) {
 	my $t1 = str2time($$d{at});
