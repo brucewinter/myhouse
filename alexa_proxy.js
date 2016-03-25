@@ -9,7 +9,7 @@ exports.handler = function (json, context) {
         // A list of URL's to call for each applicationId
         var handlers = {
             'appId':'url',
-            'amzn1.echo-sdk-ams.app.e95cdb9a-b11b-4749-bc29-08b5b635c245':'http://your_smarthouse_ip:80/your_smarthouse_code.pl'
+            'amzn1.echo-sdk-ams.app.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx':'http://your_smarthouse_ip:80/your_smarthouse_code.pl'
         };
         
         // Look up the url to call based on the appId
