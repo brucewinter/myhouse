@@ -7,7 +7,7 @@ my $text = "@ARGV";
 my $file = substr $text, 0, 100;
 $file =~ s/\W/_/g;
 $file = "/home/bruce/mh/local/data/cache/$file";
-$text =~ s/\W/\%20/g;
+$text =~ s/ /\%20/g;
 
 #print "tts db f=$file, t=$text.\n";
 
