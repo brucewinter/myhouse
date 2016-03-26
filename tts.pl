@@ -15,7 +15,7 @@ unless (-e $file) {
 
 # Other TTS options.  Google switched to using capthas, voicerss voice is not as nice.  Have not tried vocalware
 #   my $curl = "curl -s -A 'Mozilla' 'http://translate.google.com/translate_tts?tl=en&client=mh&q=$text' > $file";
-#   my $curl = "curl -s -A 'Mozilla' 'http://api.voicerss.org/?key=9d167964640e4e7eaafc190f467b44d0&&hl=en-ca&src=$text' > $file";
+#   my $curl = "curl -s -A 'Mozilla' 'http://api.voicerss.org/?key=your_voicerss_key&&hl=en-ca&src=$text' > $file";
 # Another option, $3 per 1000 calls: https://www.vocalware.com/support/faq
 
 # Simple IBM watson option, limited to 3 calls a minute.  For more info an an IBM API:
