@@ -1,0 +1,15 @@
+cp  /home/bruce/bin/tts_mqtt  /home/bruce/Dropbox
+
+scp /home/bruce/bin/tts_mqtt  pi@192.168.0.143:~/bin
+scp /home/bruce/bin/tts_mqtt  pi@192.168.0.144:~/bin
+scp /home/bruce/bin/tts_mqtt  pi@192.168.0.146:~/bin
+scp /home/bruce/bin/tts_mqtt  pi@192.168.0.148:~/bin
+scp /home/bruce/bin/tts_mqtt  pi@192.168.0.149:~/bin
+
+ssh pi@192.168.0.143 sudo systemctl restart tts_mqtt 
+ssh pi@192.168.0.144 sudo systemctl restart tts_mqtt 
+ssh pi@192.168.0.146 sudo systemctl restart tts_mqtt 
+ssh pi@192.168.0.148 sudo systemctl restart tts_mqtt 
+ssh pi@192.168.0.149 sudo systemctl restart tts_mqtt 
+
+sudo service tts_mqtt.sh restart

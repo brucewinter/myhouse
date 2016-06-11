@@ -1,0 +1,114 @@
+#!/usr/bin/perl
+use strict;
+use Net::MQTT::Simple;
+use Time::HiRes qw( time sleep);
+$| = 1;
+
+my $os_win  = 1 if $^O eq "MSWin32";
+my $h = ($os_win) ? 'hostname' : 'hostname -s';
+my $host = `$h`;  chomp $host;
+
+my $server = '192.168.0.150';
+
+my %rooms1 = (nuc => 'upstairs', rdeck =>    'deck', rbedroom => 'bedroom', rdownstairs => 'downstairs', rtreehouse => 'treehouse',  rkitchen => 'kitchen', 'ADMINIB-5ULC8UK' => 'bruce');  # cstick1 => 'tv');
+my %rooms2 = reverse %rooms1;
+my %rooms3;
+my $room  = $rooms1{$host};
+
+my $delay_default      = 150;
+my %delays = (bruce =>  -150, upstairs =>  100);
+my $delay = $delays{$room};
+
+my $play = 'aplay';
+$play = '"c:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe" -I dummy --dummy-quiet --play-and-exit' if $os_win;
+$play = '"c:\\Program Files\\VideoLAN\\VLC\\vlc.exe" -I dummy --dummy-quiet --play-and-exit'       if $room eq 'tv';
+
+my $file = '/tmp/tts_mqtt.mp3';
+$file = 'c:\tts_mqtt.mp3' if $os_win;
+
+#----
+
+my $mqtt1 = Net::MQTT::Simple->new($server);
+
+$mqtt1->subscribe( "mh/$room/speak_send", \&play_file1 );  # For speaking to just this room
+$mqtt1->subscribe( "mh/speak_send",       \&play_file2 );  # For speaking to all rooms
+$mqtt1->subscribe( "mh/speak_ready",      \&play_file3 );  # For counting which rooms have received the file and are ready to speak
+$mqtt1->subscribe( "mh/speak_backup",     \&play_file4 );  # For when a room times out
+
+print "h=$host r=$room.  Waiting for messages...\n";
+
+#$mqtt1->run();
+my $deadman_count;
+while (1) {
+    my $t = $mqtt1->tick(60);
+    if(!$t) {
+	print " dc=$deadman_count";
+	sleep 1; #  No need for very fast looping if network is down
+	if ($deadman_count++ > 60*5) {
+	    system 'sudo reboot';  # reboot if down for > 5 minutes
+	    $deadman_count = 0;
+	}
+    }
+    else {
+	$deadman_count = 0;
+    }
+}
+
+sub play_file1 {
+    my ($topic, $msg) = @_;
+    print localtime() . " tts h=$host r=$room t=$topic\n";
+    write_file($msg);
+    system "$play $file";
+}
+
+my $time_start;
+my $flag_played = 1;
+
+sub play_file2 {
+    my ($topic, $msg) = @_;
+    print localtime() . " tts h=$host r=$room t=$topic\n";
+    $time_start = time();
+    write_file($msg);
+#   system "mosquitto_pub -h 192.168.0.150 -d -t 'mh/speak_ready' -m 'ready' >/dev/null 2>&1";
+    $mqtt1->publish("mh/speak_ready" => "$room ready");
+    %rooms3 = %rooms2;  # Keep track of which rooms are ready
+    $flag_played = 0;
+}
+
+sub play_file3 {
+    my ($topic, $msg) = @_;
+    my ($rroom) = split ' ', $msg;
+    my $time_diff = int(1000 * (time() - $time_start));
+    print localtime() . " tts h=$host r=$room t=$topic d=$delay rr=$rroom td=$time_diff\n";
+    delete $rooms3{$rroom};
+                       # Play file if all rooms are ready (hash is empty)
+    if (!%rooms3 and !$flag_played) {
+	&play_file_now;
+    }
+}
+
+sub play_file4 {
+    my ($topic, $msg) = @_;
+    my $rrooms = join ' ', (sort keys %rooms3);
+    print localtime() . " tts h=$host r=$room t=$topic rr=$rrooms.\n\n";
+    if ($rrooms and !$flag_played) {
+	&play_file_now();
+    }
+}
+
+sub play_file_now {
+    my $delay2 = ($delay_default + $delay) / 1000;
+    sleep $delay2; # Sync up speakers per how fast they are
+    print "sleeping for $delay2\n";
+    system "$play $file";
+    $mqtt1->publish("mh/speak_done" => "$room done");
+    $flag_played = 1;
+}
+
+sub write_file {
+    my ($msg) = @_;
+    open (OUT, ">", $file) or die "Couldn't open output $file";
+    binmode(OUT);  
+    print OUT $msg;
+    close OUT;
+}

@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+# Read stuff (e.g. dht22 temp/humidity sensor) on raspberry pi and post to MQTT and xively
+
+use strict;
+use Net::MQTT::Simple;
+$|++;
+
+my $server = '192.168.0.150';
+my $mqtt1 = Net::MQTT::Simple->new($server);
+
+my $xfeed = 'your_feed';
+my $xkey  = 'your_key';
+    
+my $loc = `hostname`;  chomp $loc;
+my ($t1, $h1, $t2);
+
+my $dht22 = 1;
+    
+print "Starting\n";
+while (1) {
+                             # Get wifi strength
+    my $wlan = `iwconfig wlan0`;
+    my ($wsl) = $wlan =~ /Signal level=(\S+)/m;
+
+    my $json;
+    $json .= &jit("wifi_$loc", $wsl);
+    
+    if ($dht22) {
+	my $data = `sudo /home/pi/Adafruit_Python_DHT/examples/AdafruitDHT.py 22 4`;
+	($t1, $h1) = $data =~ /Temp=(\S+)\*  Humidity=(\S+)\%/;
+	$t1 = $t1 *  9/5.0 + 32;
+	if ($h1 > 0 and $h1 < 100) {
+	    $json .= &jit("Temp_$loc", $t1);
+	    $json .= &jit("Humid_$loc", $h1);
+	}
+    }
+
+    my $owd = '/sys/bus/w1/devices';
+    my $c;
+    if (-e $owd) {
+	opendir(my $dh, $owd);
+	for my $id (readdir($dh)) {
+	    my $f = "$owd/$id/w1_slave";
+	    if (-e $f) {
+		$c++;
+		my $data = `cat $f`;
+		($t2) = $data =~ / t=(\S+)/m;
+		$t2 = ($t2/1000) *  9/5.0 + 32;
+		print "db $c id=$id t2=$t2\n";
+		if ($t2 > -40 and $t2 < 120) {
+		    $json .= &jit("Temp_${loc}_$c", $t2);
+		}
+	    }
+	}
+    }
+
+    print "wsl=$wsl t1=$t1 h1=$h1 t2=$t2\n";
+
+    $mqtt1->publish("mh/$loc/sense" => "$loc $json");
+
+                        # Post to the cloud
+    chop $json;
+    my $curl = qq|curl silent --request PUT --data '{ "version" : "1.0.0", "datastreams" : [ $json ] }' --header "X-ApiKey: $xkey" --verbose http://api.xively.com/v2/feeds/$xfeed.json|;
+    system "$curl >/dev/null 2>&1";
+
+    sleep 60;
+}	    
+
+sub jit {
+    my ($id, $value) = @_;
+    return qq| { "id" : "$id", "current_value" : "$value"}  ,|;
+}
+
