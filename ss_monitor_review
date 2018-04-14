@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+
+# Called from Misterhouse with this:
+#  system "/home/bruce/bin/ss_monitor_review am &" if time_now  '07:00 AM';
+#  system "/home/bruce/bin/ss_monitor_review pm &" if time_now  '10:00 PM';
+
+my $qual = shift @ARGV;
+
+my ($mday) = sprintf("%02i", (localtime(time))[3]);
+
+print "ss_monitor_review starting for $qual day=$mday\n";
+
+#y $f1 = "/home/bruce/mh/local/data/logs/ss_monitor.vlog2.txt";
+my $f1 = "/home/bruce/mh/www/ss/ss_monitor.vlog.txt";
+my $f2 = "/home/bruce/mh/www/ss/ss_monitor.vlog2.txt";
+my $f3 = "/home/bruce/mh/www/ss/ss_monitor.slog.txt";
+my $p1 = "/home/bruce/mh/www/ss";
+my $p2 = "$p1/$mday.$qual";
+my $p3 = "$p1/$qual";
+
+# Change to: file "name.mp4"
+system qq|sed "s/.*/file \'&\'/g" $f1 > $f2|;
+    
+my $s1 = '/mnt/surveillance/@Snapshot';
+my $s2 = '/mnt/home/temp/is.b';
+
+system "ffmpeg -y -f concat -c:a aac -safe 0 -i $f2 -c copy $p2.vr1x.mp4 > /dev/null 2>&1";
+
+# Note: ffmpeg speed up will freeze on a frame when mixing videos of different resolutions.
+#       can not change resolutikon durring above concat copy, so add an extra step
+
+system "ffmpeg -y -i $p2.vr1x.mp4 -vf 'scale=1920:1080,format=yuv420p' $p2.vr1xr.mp4 > /dev/null 2>&1";
+
+# Note: ffmpeg speedup process leaves faster video at the same length as the original.  This hack truncates it to proper length
+my $l = `ffprobe -v error -show_entries format=duration  -of default=noprint_wrappers=1:nokey=1 $p2.vr1xr.mp4`;
+print "ss_monitor_review video length=$l\n";
+$l /= 8;
+$l += 1; # Seems to round down
+print "ss_monitor_review video length=$l\n";
+
+system "ffmpeg -y -i $p2.vr1xr.mp4 -filter:v 'setpts=(PTS-STARTPTS)/8' -t $l $p2.vr8x.mp4  > /dev/null 2>&1";
+
+system "/home/bruce/bin/ss_s2v.pl 14 $s1 $p2.sr1.mp4";
+system "/home/bruce/bin/ss_s2v.pl 14 $s2 $p2.sr2.mp4";
+
+system "rm -f $f1.old $f3.old $p3.vr1x.mp4 $p3.vr8x.mp4 $p3.sr1.mp4 $p3.sr2.mp4";
+system "mv $f1 $f1.old";
+system "mv $f3 $f3.old";
+system "cp $p2.vr1x.mp4 $p3.vr1x.mp4";
+system "cp $p2.vr8x.mp4 $p3.vr8x.mp4";
+system "cp $p2.sr1.mp4 $p3.sr1.mp4";
+system "cp $p2.sr2.mp4 $p3.sr2.mp4";
+
+print "ss_monitor_review done\n";
+
+#system "/home/bruce/bin/sshn.restart.ss_monitor";
+
+# Restart ss_monitor, with fresh log file
