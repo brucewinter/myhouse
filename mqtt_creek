@@ -8,13 +8,29 @@
 import time, sys
 import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
+import Adafruit_ADS1x15
 
 FLOW_SENSOR = 23
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(FLOW_SENSOR, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
+# Relay a=1, b=2, c=3, d=4/unused
 RELAYS = [[06, 13], [19, 26], [12, 16], [20, 21]]
+
+# Create an ADS1115 ADC (16-bit) instance.
+adc = Adafruit_ADS1x15.ADS1115()
+
+# Choose a gain of 1 for reading voltages from 0 to 4.09V.
+# Or pick a different gain to change the range of voltages that are read:
+#  - 2/3 = +/-6.144V
+#  -   1 = +/-4.096V
+#  -   2 = +/-2.048V
+#  -   4 = +/-1.024V
+#  -   8 = +/-0.512V
+#  -  16 = +/-0.256V
+# See table 3 in the ADS1015/ADS1115 datasheet for more info on gain.
+GAIN = 1
 
 for i in [0,1,2,3]:
     for j in [0,1]:
@@ -34,11 +50,11 @@ def on_message(mqttc, obj, msg):
     print "creek message: " + msg.topic + " = " + msg.payload
 #   print("creek message qos=",msg.qos)
 #   print("creek message retain flag=",msg.retain)
-    if msg.topic == "creek/valve/1":
+    if msg.topic == "creek/valve/3":
         valve_control(1, msg.payload)
     if msg.topic == "creek/valve/2":
         valve_control(2, msg.payload)
-    if msg.topic == "creek/valve/3":
+    if msg.topic == "creek/valve/1":
         valve_control(3, msg.payload)
     if msg.topic == "creek/valve/4":
         valve_control(4, msg.payload)
@@ -56,21 +72,22 @@ def on_log(mqttc, obj, level, string):
 def countPulse(channel):
    global flow_count
    flow_count = flow_count + 1
-   print flow_count
+#  print flow_count
 
 
 def valve_control(valve, state):
     ro = RELAYS[valve-1][0]
     rc = RELAYS[valve-1][1]
-    t  = 5
+    t  = 10
     print "creek Changing valve:" + str(valve) + state + str(ro) + str(rc)
 	
-    if state == "open":
+    if state == "open" or state == 'on':
         r = ro
-    elif state == "close":
+    elif state == "close" or state == 'off':
         r = rc
     else:
-        t = float(state) / 10
+#       t = float(state) / 10
+        t = float(state)
         r = ro
         if t < 0:
             r = rc
@@ -100,12 +117,29 @@ print 'creek loop forever'
 #mqttc.loop_forever()
 mqttc.loop_start()
 
+seconds = 0
+press1  = 0
+flow_count_prev = 0
+
 while(1):
-    time.sleep(10)
-    print flow_count
-    if flow_count > 0:
-        mqttc.publish("creek/flow", flow_count)
-    flow_count = 0
+    time.sleep(1)
+    press2 = adc.read_adc(1, gain=GAIN)
+    pressd = press2 - press1
+#   print "Pressure=" + str(press2) + " diff=" + str(pressd) + " + s=" + str(seconds)
+    if (abs(pressd) > 100):
+        print "Pressure change.  Pressure=" + str(press2) + " diff=" + str(pressd)
+        press1 = press2
+        mqttc.publish("creek/pressure", press2)
+    seconds += 1
+    if (seconds == 5):
+        flowd = flow_count - flow_count_prev
+#       print "Flow= " + str(flow_count)
+        if (abs(flowd) > 5):
+            print "Flow change.  Flow= " + str(flow_count) + " diff=" + str(flowd)
+            mqttc.publish("creek/flow", flow_count)
+            flow_count_prev = flow_count
+        seconds    = 0
+        flow_count = 0
 
     
 print '\ncreek caught keyboard interrupt!, bye'
