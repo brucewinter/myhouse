@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+# Monitors water flow and pressure.  Controls relays that open/close water ball valves.
+# More info here:
+#   https://www.youtube.com/watch?v=GmIrJjWhRco
+#   https://www.youtube.com/watch?v=zlZQ0ffnitM
+#   https://www.youtube.com/watch?v=-O_5U8M04PY
+
 # Run on startup with: 
 #   /etc/init.d/creek.sh
 #   sudo service creek.sh restart
