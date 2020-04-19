@@ -1,7 +1,8 @@
 #if 1 // Change to 1 to enable this code (must enable ONE user*.cpp only!)
 // CORRESPONDING LINE IN HeatSensor.cpp MUST ALSO BE ENABLED!
 
-// 04/19/2020 brucewinter Modified to add servo
+// 04/19/2020 
+//   Modified to add servo, demo at https://youtu.be/4ESjNbYZQHg
 //   Original from: https://raw.githubusercontent.com/adafruit/Adafruit_Learning_System_Guides/master/M4_Eyes/user_watch.cpp
 
 #include "globals.h"
