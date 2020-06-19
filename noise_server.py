@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# More info at: https://youtu.be/4Ll4Y2qvTjc
+# More info at: https://youtu.be/GcGF6b5X6fI
 
 # Run on startup with: 
 #   /etc/init.d/noise_server.sh
