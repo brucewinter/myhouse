@@ -1,6 +1,6 @@
 #!/usr/bin/python3 -u
 
-# Calls rec to detect noise.  More info at: https://youtu.be/4Ll4Y2qvTjc
+# Calls rec to detect noise.  More info at: https://youtu.be/GcGF6b5X6fI
 
 import os
 import sys
