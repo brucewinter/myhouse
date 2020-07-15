@@ -1,0 +1,37 @@
+
+* {
+  color: #ffffff;
+  background-color: #000000;
+}
+
+#body {
+    margin: 0;
+}
+
+
+#box2a {
+  float: left;
+  width: 75%;
+}
+#clock {
+  font-size: 28vw;
+}
+#hvac {
+    font-size: 7vw;
+}
+
+#box2b {
+  float: right;
+  width: 25%;
+  font-size: 12vw;
+}
+#speech {
+    font-size: 4vw;
+}
+
+#box1:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+

@@ -1,0 +1,30 @@
+<!doctype>
+
+<!-- Bedside clock with temps  -->
+
+<head>
+  <link type='text/css' rel='stylesheet' href='./clock.css'>
+  <script src='./mqttws31.js'></script>
+  <script src='./pvs/moment.js'></script>
+</head>
+
+<body> 
+
+  <div id='box1'>
+    <div id='box2a'>
+      <div id='clock'>clock</div>
+      <div id='speech'>speech</div>
+    </div>
+    <div id='box2b'>
+      <div id='tbed'>tbed</div>
+      <div id='tup' >tup</div>
+      <div id='tout' >tout</div>
+      <div id='hvac'>hvac</div>
+    </div>
+  </div>
+
+  <script src='./clock.js'></script>
+
+  <script>setTimeout(function(){console.log("Reloading"); window.location.reload(true)},  1000*60*15);</script>
+
+</body>
