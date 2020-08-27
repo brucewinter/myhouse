@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Monitor air quality, graph it to a local LCD, send it to a smarthouse via mqtt, and control a range hood fan for smoke control
+# Monitor air quality, graph it to a local LCD, send it to a smarthouse via mqtt,
+# and control a range hood fan for smoke control using switchbots
 
 # More info at:
+#   https://youtu.be/UTyxMI9BEzo
+#   https://github.com/brucewinter/myhouse/blob/master/air.py
+
+# Other videos at:
 #   https://www.youtube.com/brucewinter
-#   https://github.com/brucewinter
 
 # Note:
 #  Local fan control via switchbot is done from the smart house program via mqtt, for more sophisticated control (e.g. hysteresis)
