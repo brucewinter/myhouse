@@ -62,7 +62,6 @@ def on_message(mqttc, obj, msg):
     if msg.topic == 'sensor/Outside Temperature' :  data['tout'] = p
     if msg.topic == 'sensor/Upstairs Temperature' : data['tin'] = p
     if msg.topic == 'ha/stove' :  os.system('/mnt/nas/bin/switchbot_stove ' + p)
-    if msg.topic == 'ha/stove' :  os.system('/mnt/nas/bin/switchbot_stove ' + p)
     
 def on_log(mqttc, obj, level, string):
     print(string)
