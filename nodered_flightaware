@@ -1,0 +1,602 @@
+[
+    {
+        "id": "df28014f.54d4f",
+        "type": "www-request",
+        "z": "9a950195.090d7",
+        "name": "Aircraft",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://192.168.86.201:8080/data/aircraft.json",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 320,
+        "y": 380,
+        "wires": [
+            [
+                "20378d94.7b4ce2",
+                "b417e685.792cb8"
+            ]
+        ]
+    },
+    {
+        "id": "b103c1e9.ccc3f",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "10s",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 380,
+        "wires": [
+            [
+                "df28014f.54d4f"
+            ]
+        ]
+    },
+    {
+        "id": "7af20eb2.78e4f",
+        "type": "function",
+        "z": "9a950195.090d7",
+        "name": "Close?",
+        "func": "\n\n//{\"hex\":\"a008c5\",\"flight\":\"DAL1729 \",\"alt_baro\":35525,\"alt_geom\":37700,\"gs\":443.5,\"track\":253.0,\"baro_rate\":1088,\"squawk\":\"3560\",\"emergency\":\"none\",\"category\":\"A3\",\"nav_altitude_mcp\":36000,\"nav_heading\":0.0,\"lat\":33.049203,\"lon\":-86.674450,\"nic\":8,\"rc\":186,\"seen_pos\":0.9,\"version\":2,\"nic_baro\":1,\"nac_p\":9,\"nac_v\":1,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":1890,\"seen\":0.1,\"rssi\":-20.0},\n// http://www.nathanpralle.com/downloads/DUMP1090-FA_ADS-B_Aircraft.JSON_Field_Descriptions.pdf\n// “now”      is seconds-since-Jan-1-1970 when the JSON was generated; \n// “seen”     is the number of seconds before “now” when a message was last seen; \n// “seen_pos” is the number of seconds before “now” when the position fields were last updated; \n// “rssi” is received signal strength of recent messages in dBFS.\n\n\n//node.warn(msg.payload)\nfor (var i in msg.payload.aircraft) {\n    f = msg.payload.aircraft[i]\n    \n    if (f.alt_baro > 10000) {continue}\n    if (f.seen_pos > 10)    {continue} // Old data is not useful\n    if (!f.flight)          {continue}\n    \n//  node.warn(f)\n    if (f.lat) {\n        h1  = f.track\n        id  = f.flight.trim()\n        c1  = f.category\n        a1  = f.alt_baro\n        if (a1) {a2 = a1.toPrecision(2)}\n        a3  = Number.parseFloat(a2)\n        s1  = Math.round(f.gs * 1.15078) // knot to mph\n        s2 = f.geom_rate || f.baro_rate || 0\n        ad  = ''\n        if (a1 < 10000) {\n            if (s2 >  500) { ad = 'accending' }\n            if (s2 < -500) { ad = 'decending' }\n        }\n//      node.warn([id, a1, s1, s2, ad].join())\n        \n        d1  = distance1(33.437475, -86.779897, f.lat, f.lon, 'N').toFixed(1)\n        est = distance2(33.437475, -86.779897, f.lat, f.lon, h1)\n//      node.warn('track=' + f.track + ' lat=' + f.lat + ' lon=' + f.lon + ' s=' + f.gs + ' id=' + id)\n        d2  = est[0]\n        d3  = est[1]\n        h2  = est[2]\n        h3  = est[3]\n        arriving = est[4]\n        toa      = Math.round(3600 * d3 / s1)\n        deg_over = Math.round(Math.atan(d2 / (a1/5280)) * 180 / Math.PI)       // Overhead angle to closest point\n        \n        h1 = direction(h1)\n        h3 = direction(h3)\n \n        if (d2 < 5 && d1 < 10) { \n          node.warn(f.flight + ' d1=' + d1 + ' d2=' + d2 + ' d3=' + d3 + ' a=' + a3 + ' s=' + s1 + ' h1=' + h1 + ' h2=' + h2 + ' h3=' + h3 + ' a=' + arriving + ' toa=' + toa + ' do=' + deg_over) \n        }\n\n//      if (d1 < 1.5 || (arriving && d2<3.0 && toa<20)) {\n        if (arriving && deg_over<20 && toa<90) {\n//          pretext = c1 + ' heading ' + h1 + ' in ' + toa + ' seconds ' + deg_over + ' degrees ' + h3 + ' ' + ad + ' at ' + a3 + ' feet '\n            pretext = 'in ' + toa + ' seconds ' + c1 + ' ' + ad + ' at ' + a3 + ' feet heading ' + h1 + ' ' + deg_over + ' degrees ' + h3\n            if (toa > 20) {\n                delay1 = 1000*(toa - 10)\n            }\n            else {\n                delay1 = 0\n                pretext = ''\n            }\n            fdata = {flight: id, track: f.track, category: f.category, lat: f.lat, lon: f.lon, gs: f.gs, alt_baro: f.alt_baro, seen_pos: f.seen_pos, dist: d1, dist2: d2, dist3: d3, speed: s1, alt: a3, arriving: arriving, heading: h1, dir: h3, toa: toa, deg_over: deg_over, risefall: ad}\n            flow.set('flight_' + id, fdata)\n            node.send({topic: id, delay: delay1, pretext: pretext})\n//          node.send({topic: id, delay: delay1, data: fdata})\n            node.status([id, d1, d2, deg_over, toa, delay1/1000].join())\n        }\n    }\n}\n\n\nfunction direction (d1) {\n    if      (d1 <  22)  {d2 = 'North'}\n    else if (d1 <  67)  {d2 = 'NorthEast'}\n    else if (d1 < 112)  {d2 = 'East'}\n    else if (d1 < 157)  {d2 = 'SouthEast'}\n    else if (d1 < 202)  {d2 = 'South'}\n    else if (d1 < 247)  {d2 = 'SouthWest'}\n    else if (d1 < 292)  {d2 = 'West'}\n    else if (d1 < 337)  {d2 = 'NorthWest'}\n    else                {d2 = 'North'}  \n    return d2\n}\n\n\n// Calculate distance from point to line.\n// The point is home, the line is based on the current aircraft location and heading\nfunction distance2(lat1, lon1, lat2, lon2, heading2) {\n\n// Angle relative to E/W, not N/S, and clock-wise to counter-clock-wise, 0->360 => -180->+180\n//  0 => 90,  90 => 0, 180 => -90 270 =>  -180, 271 => 179, 360 -> 90\n    deg1 = -heading2 + 90 \n    if (deg1 < -180) { deg1 = deg1 + 360 }\n    angle1 = Math.PI / 180 * deg1 \n\n// Normalize lat,lon to miles\n    p1 = latlon_to_miles(lat1, lon1)\n    p2 = latlon_to_miles(lat2, lon2)\n\n// Convert aircaft line to 'implicit line' form ax + by + c = 0\n// http://geomalgorithms.com/a02-_lines.html\n// Recall that when L makes an angle theta with the x-axis and P0=(x0,y0) is any point on L, \n// then the normalized implicit equation has: a = –sin(theta), b = cos(theta), and c = x0 sin(theta) – y0 cos(theta).\n\n    a = -Math.sin(angle1)\n    b =  Math.cos(angle1)\n    c =  Math.sin(angle1)*p2[1] - Math.cos(angle1)*p2[0]\n\n// Closest distance of point to line: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line    \n    d2 = Math.abs(a*p1[1] + b*p1[0] + c)  / Math.pow((Math.pow(a, 2) + Math.pow(b, 2)), 0.5)\n\n// Distance from aircraft (lat2/lon2) to where it will be closest\n    d3 = Math.pow( Math.pow(p2[0]-p1[0], 2) + Math.pow(p2[1]-p1[1], 2) - Math.pow(d2, 2), 0.5)\n\n    \n// Calculate current angle between home and aircraft, so we know if it is getting closer or further\n    deg2  = Math.atan2(p2[0] - p1[0], p2[1] - p1[1]) * 180 / Math.PI\n    deg12 = Math.abs(deg1 - deg2)\n    if (deg12 > 180) { deg12 = 360 - deg12 }\n    \n// Calculate angle to closest point.\n    p3y  = p2[0] + d3 * Math.sin(deg1*Math.PI/180)\n    p3x  = p2[1] + d3 * Math.cos(deg1*Math.PI/180)\n    deg3 = Math.atan2(p3y - p1[0], p3x - p1[1]) * 180 / Math.PI \n//    node.warn(['db1a', deg1, d3, p2[1], Math.cos(deg1*Math.PI/180), p3x, p1[1], p2[0], Math.sin(deg1*Math.PI/180), p3y, p1[0], deg3].join())\n//    node.warn(['db1a', deg1, deg2, deg3, deg12].join())\n\n//  Convert angle to 'normal' heading form\n//  0 => 90,  80 => 10, 100 => 350, 180 => 270, -10 => 100, -180 => 270\n    deg2b = -deg2 + 90 \n    if (deg2b < 0) { deg2b = deg2b + 360 }\n    deg3b = -deg3 + 90 \n    if (deg3b < 0) { deg3b = deg3b + 360 }\n\n    if (d2 < 5) {\n//      node.warn(a + ' ' + b + ' ' + c + ' ' + ' deg1=' + deg1 + ' deg2b=' + deg2b + ' deg12=' + deg12 + ' deg3b=' + deg3b )\n    }\n    \n    return([d2.toFixed(1), d3.toFixed(1), Math.round(deg2b), Math.round(deg3b), deg12 > 90])\n\n    \n}\n\nfunction toDegrees (angle) {\n  return angle * (180 / Math.PI);\n}\nfunction toRadians (angle) {\n  return angle * (Math.PI / 180);\n}\nfunction latlon_to_miles(lat1, lon1) {\n//  One degree of latitude equals approximately 364,000 feet (69 miles), one minute equals 6,068 feet (1.15 miles), and one-second equals 101 feet. \n//  One-degree of longitude equals 288,200 feet (54.6 miles), one minute equals 4,800 feet (0.91 mile), and one second equals 80 feet.\n    return [lat1 * 69, lon1 * 54.6]\n}\n\n\n//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n//:::                                                                         :::\n//:::  This routine calculates the distance between two points (given the     :::\n//:::  latitude/longitude of those points). It is being used to calculate     :::\n//:::  the distance between two locations using GeoDataSource (TM) prodducts  :::\n//:::                                                                         :::\n//:::  Definitions:                                                           :::\n//:::    South latitudes are negative, east longitudes are positive           :::\n//:::                                                                         :::\n//:::  Passed to function:                                                    :::\n//:::    lat1, lon1 = Latitude and Longitude of point 1 (in decimal degrees)  :::\n//:::    lat2, lon2 = Latitude and Longitude of point 2 (in decimal degrees)  :::\n//:::    unit = the unit you desire for results                               :::\n//:::           where: 'M' is statute miles (default)                         :::\n//:::                  'K' is kilometers                                      :::\n//:::                  'N' is nautical miles                                  :::\n//:::                                                                         :::\n//:::  Worldwide cities and other features databases with latitude longitude  :::\n//:::  are available at https://www.geodatasource.com                         :::\n//:::                                                                         :::\n//:::  For enquiries, please contact sales@geodatasource.com                  :::\n//:::                                                                         :::\n//:::  Official Web site: https://www.geodatasource.com                       :::\n//:::                                                                         :::\n//:::               GeoDataSource.com (C) All Rights Reserved 2018            :::\n//:::                                                                         :::\n//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\nfunction distance1(lat1, lon1, lat2, lon2, unit) {\n\tif ((lat1 == lat2) && (lon1 == lon2)) {\n\t\treturn 0;\n\t}\n\telse {\n\t\tvar radlat1 = Math.PI * lat1/180;\n\t\tvar radlat2 = Math.PI * lat2/180;\n\t\tvar theta = lon1-lon2;\n\t\tvar radtheta = Math.PI * theta/180;\n\t\tvar dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);\n\t\tif (dist > 1) {\n\t\t\tdist = 1;\n\t\t}\n\t\tdist = Math.acos(dist);\n\t\tdist = dist * 180/Math.PI;\n\t\tdist = dist * 60 * 1.1515;\n\t\tif (unit==\"K\") { dist = dist * 1.609344 }\n\t\tif (unit==\"N\") { dist = dist * 0.8684 }\n\t\treturn dist;\n\t}\n}\n\n//A- = Unspecified powered aircraft\n//A1 = Light (< 15 500 lbs.)\n//A2 = Small (15 500 to 75 000 lbs.)\n//A3 = Large (75 000 to 300 000 lbs.)\n//A4 = High Vortex Large(aircraft such as B-757)\n//A5 = Heavy (> 300 000 lbs.)\n//A6 = High Performance ( > 5 g acceleration and > 400kts)\n//A7 = Rotorcraft\n//B- = Unspecified unpowered aircraft or UAV or spacecraft\n//B1 = Glider/sailplane\n//B2 = Lighter-than-Air\n//B3 = Parachutist/Skydiver\n//B4 = Ultralight/hang-glider/paraglider\n//B5 = Reserved\n//B6 = Unmanned Aerial Vehicle\n//B7 = Space/Trans-atmospheric vehicle\n//C- = Unspecified ground installation or vehicle\n//C1 = Surface Vehicle - Emergency Vehicle\n//C2 = Surface Vehicle - Service Vehicle\n//C3 = Fixed Ground or Tethered Obstruction\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 620,
+        "y": 380,
+        "wires": [
+            [
+                "860fedd6.6fb5e"
+            ]
+        ]
+    },
+    {
+        "id": "20378d94.7b4ce2",
+        "type": "change",
+        "z": "9a950195.090d7",
+        "name": "Watchdog",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "Flight Aware",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "timeout",
+                "pt": "msg",
+                "to": "120",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 440,
+        "wires": [
+            [
+                "6dd1246e.bb431c"
+            ]
+        ]
+    },
+    {
+        "id": "6dd1246e.bb431c",
+        "type": "link out",
+        "z": "9a950195.090d7",
+        "name": "watchdog",
+        "links": [
+            "68ba092f.716598"
+        ],
+        "x": 715,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "203950e6.023d1",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"cat\":\"A1\",\"dist\":\"2\",\"alt\":\"1000\"}",
+                "vt": "json"
+            },
+            {
+                "p": "delay",
+                "v": "3",
+                "vt": "num"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "DAL886",
+        "x": 740,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a641eb72.5d63c8",
+        "type": "link out",
+        "z": "9a950195.090d7",
+        "name": "",
+        "links": [
+            "2f658ee6.05ad92"
+        ],
+        "x": 1515,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "de6accb0.45fd9",
+        "type": "www-request",
+        "z": "9a950195.090d7",
+        "name": "FA info",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://brucewinter:your_ FlightXML_Key@flightxml.flightaware.com/json/FlightXML2/FlightInfoEx?howMany=1&ident={{topic}}",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 910,
+        "y": 380,
+        "wires": [
+            [
+                "18ceb892.54e697"
+            ]
+        ]
+    },
+    {
+        "id": "31525c93.c13c84",
+        "type": "function",
+        "z": "9a950195.090d7",
+        "name": "Announce",
+        "func": "\n//node.send({topic: id, data: {id: id, cat: c1, dist: d2, alt: a3}})\nflightinfo = {}\nif (msg.FlightInfoExResult) {\n    flightinfo = msg.FlightInfoExResult.flights[0]\n}\nap1    = flightinfo.origin\nap2    = flightinfo.destination\ncity1  = flightinfo.originCity\ncity2  = flightinfo.destinationCity\nactype = flightinfo.aircrafttype\n\nid     = msg.topic\nowner  = msg.owner\nacinfo = msg.acinfo\nacinfo = acinfo.replace(/(\\S+ \\S+).+/, \"$1\") // reduce info for less speech \n\n//owner = owner.replace(' LLC', '')\n//owner = owner.replace(' INC', '')\n//owner = owner.replace(' CORP', '')\n//owner = owner.replace(' INC', '')\n//owner = owner.replace(' BOARD OF TRUSTEES', '')\n//owner = owner.replace(' TRUSTEE', '')\n//owner = owner.replace(' AIR LINES', '')\n\nowner = owner.replace(/(\\S+ \\S+).*/, \"$1\") // syz air air -> xyz air\n\nnode.status([id, owner, msg.delay].join())\n\nif (owner == 'Unknown Owner') {owner = id}\n\nif (ap1 == 'KBHM') {city1 = 'Birmingham'}\nif (ap2 == 'KBHM') {city2 = 'Birmingham'}\nif (ap1 == 'KEKY') {city1 = 'Bessemer'}\nif (ap2 == 'KEKY') {city2 = 'Bessemer'}\nif (ap1 == 'KEET') {city1 = 'Alabaster'}\nif (ap2 == 'KEET') {city2 = 'Alabaster'}\nif (ap1 == 'KJFX') {city1 = 'Jasper'}\nif (ap2 == 'KJFX') {city2 = 'Jasper'}\nif (ap1 == 'KPLR') {city1 = 'Pell City'}\nif (ap2 == 'KPLR') {city2 = 'Pell City'}\n\n//if (city1 == 'Birmingham, AL') {city1 = ''}\n//if (city2 == 'Birmingham, AL') {city2 = ''}\n\nif      (!city1 &&  city2) {tofrom = ' to '   + city2}\nelse if ( city1 && !city2) {tofrom = ' from ' + city1}\nelse if ( city1 &&  city2) {tofrom = ' from ' + city1 + ' to ' + city2}\nelse                       {tofrom = ''}\n\n//toa      = msg.data.toa\n//dist     = msg.data.dist2\n//deg_over = msg.data.deg_over\n//dir1     = msg.data.heading\n//dir2     = msg.data.dir\n//ad       = msg.data.risefall\n//alt      = msg.data.alt\n//node.warn(['db1: ', toa, dist, deg_over, dir1, dir2, ad, alt].join(', '))\n\n// Use latest info\nfdata = flow.get('flight_' + id) || {}\ntoa      = fdata['toa']\ndist     = fdata['dist2']\ndeg_over = fdata['deg_over']\ndir1     = fdata['heading']\ndir2     = fdata['dir']\nad       = fdata['risefall']\nalt      = fdata['alt']\n//node.warn(['db2:', toa, dist, deg_over, dir1, dir2, ad, alt].join(', '))\n\n//loc1  = (dist < 0.3) ? 'overhead' : dist + ' miles ' + dir2\nloc1 = deg_over + ' degrees ' + dir2\n\nif (acinfo == '  ') {acinfo = msg.data.category}\n\n//g.payload  = dir1 + ' ' + owner + ' ' + acinfo\nmsg.payload  = owner + ' ' + acinfo\nmsg.payload += ' ' + ad + ' at ' + alt + ' feet '\nmsg.payload += ' heading ' + dir1\nmsg.payload += ' ' + loc1 + ', '\nmsg.payload += tofrom  //' arriving in ' + toa + ' seconds'\n\nmsg.room = 'all' // Make sure bcell gets the msg\n\n\nfunction direction2 (d1) {\n    if      (d1 <  45)  {d2 = 'North'}\n    else if (d1 < 135)  {d2 = 'East'}\n    else if (d1 < 225)  {d2 = 'South'}\n    else if (d1 < 315)  {d2 = 'West'}  \n    else                {d2 = 'North'}  \n    return d2\n}\n\nt = new Date().toLocaleTimeString('en-US')\nd = new Date().toLocaleDateString('en-US')\n \nmsg2 = {payload: {td: d + ' ' + t, text: msg.payload, data: msg.data}}\n\nreturn [msg, msg2]\n\n  ",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1400,
+        "y": 420,
+        "wires": [
+            [
+                "a641eb72.5d63c8"
+            ],
+            [
+                "486fc403.1aa81c"
+            ]
+        ]
+    },
+    {
+        "id": "31688a03.b911f6",
+        "type": "www-request",
+        "z": "9a950195.090d7",
+        "name": "FA Type",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://brucewinter:your_ FlightXML_Key@flightxml.flightaware.com/json/FlightXML2/AircraftType?type={{aircrafttype}}",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 1240,
+        "y": 380,
+        "wires": [
+            [
+                "18ceb892.54e697"
+            ]
+        ]
+    },
+    {
+        "id": "b7e910bb.83a3b",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"cat\":\"A1\",\"dist\":\"2\",\"alt\":\"1000\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "N626SR",
+        "payloadType": "str",
+        "x": 740,
+        "y": 240,
+        "wires": [
+            [
+                "de6accb0.45fd9"
+            ]
+        ]
+    },
+    {
+        "id": "860fedd6.6fb5e",
+        "type": "trigger",
+        "z": "9a950195.090d7",
+        "name": "2m",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "120",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "topic",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 760,
+        "y": 380,
+        "wires": [
+            [
+                "239442c7.945bee",
+                "de6accb0.45fd9"
+            ]
+        ]
+    },
+    {
+        "id": "f32c9385.a1bfe",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"cat\":\"A1\",\"dist\":\"2\",\"alt\":\"1000\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "JCM26",
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "de6accb0.45fd9"
+            ]
+        ]
+    },
+    {
+        "id": "ec621605.9a5848",
+        "type": "www-request",
+        "z": "9a950195.090d7",
+        "name": "FA Owner",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://brucewinter:your_ FlightXML_Key@flightxml.flightaware.com/json/FlightXML2/TailOwner?ident={{id}}",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 1240,
+        "y": 340,
+        "wires": [
+            [
+                "18ceb892.54e697"
+            ]
+        ]
+    },
+    {
+        "id": "18ceb892.54e697",
+        "type": "function",
+        "z": "9a950195.090d7",
+        "name": "Owner/Type",
+        "func": "\n//node.send({topic: id, data: {id: id, cat: c1, dist: d2, alt: a3}})\n\n// API docs: https://flightaware.com/commercial/flightxml/explorer\n// Site down status: https://twitter.com/flightawareops\n// Examples: \n// http://flightxml.flightaware.com/json/FlightXML2/AircraftType?type=B738\n// http://flightxml.flightaware.com/json/FlightXML2/TailOwner?ident=N399WM\n\n// Minimize flightaware api calls to save pennies.\n// Use cached data if available.\n\nowners = flow.get('owners', 'file') || {}\nacinfo = flow.get('acinfo', 'file') || {}\n//node.warn(owners)\n//node.warn(acinfo)\n\nif (msg.payload.FlightInfoExResult) {\n  msg.FlightInfoExResult = msg.payload.FlightInfoExResult\n}\n\nid     = msg.topic\nactype = ''\nif (msg.FlightInfoExResult) {\n    actype = msg.FlightInfoExResult.flights[0].aircrafttype \n}\n\nmsg.id = id\nmsg.aircrafttype = actype\n\nif (msg.payload.TailOwnerResult) {\n    msg.TailOwnerResult = msg.payload.TailOwnerResult\n    owners[id] = msg.TailOwnerResult.owner\n    owners = flow.set('owners', owners, 'file') \n    owners = flow.get('owners',         'file')  // This got emptyied in set??\n    node.warn('db0a: ' + id + owners[id])\n}\n\nif (msg.payload.AircraftTypeResult) {\n    msg.AircraftTypeResult = msg.payload.AircraftTypeResult\n    make = msg.AircraftTypeResult.manufacturer\n    type = msg.AircraftTypeResult.type\n    desc = msg.AircraftTypeResult.description\n    acinfo[actype] =  make + ' ' + type + ' ' + desc\n    acinfo = flow.set('acinfo', acinfo, 'file')  // This got emptyied in set??\n    acinfo = flow.get('acinfo',         'file') \n    node.warn('db0b: ' + actype + acinfo[actype])\n}\n\nmsg.headers = {} // So we can don't mess up subsequent web calls\n\nif (!(id in owners) && !msg.called_fa_owner) {\n//  node.warn('db1: ' + id)\n    msg.called_fa_owner = 1\n    node.send([msg, null, null])\n}\nelse if (!(actype in acinfo) && !msg.called_fa_type) {\n//  node.warn('db2: ' + actype)\n    msg.called_fa_type = 1\n    node.send([null, msg, null])\n}\nelse {\n    msg.owner  = owners[id]\n    msg.acinfo = acinfo[actype]\n    node.send([null, null, msg])\n}\n\n\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1070,
+        "y": 380,
+        "wires": [
+            [
+                "ec621605.9a5848"
+            ],
+            [
+                "31688a03.b911f6"
+            ],
+            [
+                "6548d46d.a1f01c"
+            ]
+        ]
+    },
+    {
+        "id": "bc9b64c3.cd1338",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"cat\":\"A1\",\"dist\":\"2\",\"alt\":\"1000\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "SLASH12",
+        "x": 740,
+        "y": 160,
+        "wires": [
+            [
+                "de6accb0.45fd9"
+            ]
+        ]
+    },
+    {
+        "id": "6ff51026.543e3",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "data",
+                "v": "{\"cat\":\"A1\",\"dist\":\"2\",\"alt\":\"1000\"}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "N820NC",
+        "x": 740,
+        "y": 120,
+        "wires": [
+            [
+                "de6accb0.45fd9"
+            ]
+        ]
+    },
+    {
+        "id": "58a72318.39d58c",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "test 1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"aircraft\":[{\"hex\":\"a588ac\",\"flight\":\"CAP156  \",\"alt_baro\":3575,\"alt_geom\":3525,\"gs\":107.1,\"track\":182.7,\"baro_rate\":-192,\"squawk\":\"5105\",\"emergency\":\"none\",\"category\":\"A1\",\"nav_qnh\":1011.2,\"nav_altitude_mcp\":3488,\"lat\":33.385403,\"lon\":-86.733417,\"nic\":9,\"rc\":75,\"seen_pos\":0.2,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":443,\"seen\":0.2,\"rssi\":-8.2},{\"hex\":\"a588ac\",\"flight\":\"CAP156  \",\"alt_baro\":3500,\"alt_geom\":3475,\"gs\":102.1,\"track\":147.4,\"baro_rate\":384,\"squawk\":\"5105\",\"emergency\":\"none\",\"category\":\"A1\",\"nav_qnh\":1011.2,\"nav_altitude_mcp\":3488,\"lat\":33.385403,\"lon\":-86.733417,\"nic\":9,\"rc\":75,\"seen_pos\":0.5,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":1351,\"seen\":0.2,\"rssi\":-7.3},{\"hex\":\"abd932\",\"flight\":\"SWA2583 \",\"alt_baro\":34400,\"alt_geom\":36025,\"gs\":422,\"track\":269.2,\"baro_rate\":1152,\"category\":\"A3\",\"lat\":33.682825,\"lon\":-86.306248,\"nic\":8,\"rc\":186,\"seen_pos\":3.6,\"version\":0,\"nac_p\":8,\"nac_v\":1,\"sil\":2,\"sil_type\":\"unknown\",\"mlat\":[],\"tisb\":[],\"messages\":21,\"seen\":1.4,\"rssi\":-22.4},{\"hex\":\"a7e579\",\"flight\":\"FDX51   \",\"alt_baro\":35025,\"alt_geom\":36750,\"gs\":519.1,\"track\":128.2,\"baro_rate\":64,\"squawk\":\"1073\",\"emergency\":\"none\",\"category\":\"A5\",\"nav_qnh\":1013.6,\"nav_altitude_mcp\":35008,\"nav_heading\":130.8,\"lat\":33.463577,\"lon\":-86.936517,\"nic\":8,\"rc\":186,\"seen_pos\":0.4,\"version\":2,\"nic_baro\":1,\"nac_p\":9,\"nac_v\":1,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":92,\"seen\":0.2,\"rssi\":-12.8}]}",
+        "payloadType": "json",
+        "x": 430,
+        "y": 440,
+        "wires": [
+            [
+                "7af20eb2.78e4f"
+            ]
+        ]
+    },
+    {
+        "id": "11f9484e.44c838",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "test 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"aircraft\":[{\"hex\":\"a6ecea\",\"flight\":\"N5450U  \",\"alt_baro\":9075,\"alt_geom\":9300,\"gs\":189.1,\"track\":91.8,\"baro_rate\":0,\"squawk\":\"0523\",\"emergency\":\"none\",\"category\":\"A1\",\"lat\":33.457947,\"lon\":-86.849066,\"nic\":9,\"rc\":75,\"seen_pos\":0,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":104,\"seen\":0,\"rssi\":-17.1},{\"hex\":\"a6ecea\",\"flight\":\"N5450U  \",\"alt_baro\":9075,\"alt_geom\":9300,\"gs\":190,\"track\":91.2,\"baro_rate\":0,\"squawk\":\"0523\",\"emergency\":\"none\",\"category\":\"A1\",\"lat\":33.456861,\"lon\":-86.807743,\"nic\":9,\"rc\":75,\"seen_pos\":0.1,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":300,\"seen\":0.1,\"rssi\":-3.8},{\"hex\":\"a3a9b6\",\"flight\":\"EDV4692 \",\"alt_baro\":24950,\"category\":\"A3\",\"nav_qnh\":1012.8,\"nav_altitude_mcp\":8000,\"nav_heading\":58.4,\"lat\":32.619991,\"lon\":-85.930686,\"nic\":8,\"rc\":186,\"seen_pos\":22.5,\"version\":2,\"nic_baro\":1,\"nac_p\":11,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":130,\"seen\":12.1,\"rssi\":-24.9},{\"hex\":\"a6ecea\",\"flight\":\"N5450U  \",\"alt_baro\":9075,\"alt_geom\":9300,\"gs\":191,\"track\":91.2,\"baro_rate\":-64,\"squawk\":\"0523\",\"emergency\":\"none\",\"category\":\"A1\",\"lat\":33.45639,\"lon\":-86.776447,\"nic\":9,\"rc\":75,\"seen_pos\":0.5,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":485,\"seen\":0.1,\"rssi\":-5.6},{\"hex\":\"a6ecea\",\"flight\":\"N5450U  \",\"alt_baro\":9075,\"alt_geom\":9300,\"gs\":189.1,\"track\":92.1,\"baro_rate\":0,\"squawk\":\"0523\",\"emergency\":\"none\",\"category\":\"A1\",\"lat\":33.455521,\"lon\":-86.744696,\"nic\":9,\"rc\":75,\"seen_pos\":0.4,\"version\":2,\"nic_baro\":1,\"nac_p\":10,\"nac_v\":2,\"sil\":3,\"sil_type\":\"perhour\",\"gva\":2,\"sda\":2,\"mlat\":[],\"tisb\":[],\"messages\":666,\"seen\":0.3,\"rssi\":-3.8},{\"hex\":\"a3a9b6\",\"alt_baro\":22750,\"alt_geom\":23850,\"gs\":447.9,\"track\":55.9,\"geom_rate\":-2176,\"category\":\"A3\",\"lat\":32.67739,\"lon\":-85.830913,\"nic\":8,\"rc\":186,\"seen_pos\":33.8,\"version\":2,\"nac_v\":1,\"sil_type\":\"perhour\",\"mlat\":[],\"tisb\":[],\"messages\":143,\"seen\":13.6,\"rssi\":-24.9}]}",
+        "payloadType": "json",
+        "x": 430,
+        "y": 480,
+        "wires": [
+            [
+                "7af20eb2.78e4f"
+            ]
+        ]
+    },
+    {
+        "id": "486fc403.1aa81c",
+        "type": "file",
+        "z": "9a950195.090d7",
+        "name": "log",
+        "filename": "/share/logs/aircraft.txt",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1530,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4a396bb.65c8b94",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "test 3",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"aircraft\":[{\"flight\":\"N5450U  \",\"track\":91.2,\"category\":\"A1\",\"lat\":33.456861,\"lon\":-86.807743,\"gs\":190,\"alt_baro\":9075,\"seen_pos\":0.1,\"dist\":\"1.8\",\"dist2\":\"1.3\",\"dist3\":\"1.5\",\"speed\":219,\"alt\":9100,\"arriving\":true,\"heading\":91.2,\"dir\":264,\"toa\":25}]}",
+        "payloadType": "json",
+        "x": 430,
+        "y": 520,
+        "wires": [
+            [
+                "7af20eb2.78e4f"
+            ]
+        ]
+    },
+    {
+        "id": "446c0c11.fc8584",
+        "type": "inject",
+        "z": "9a950195.090d7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"aircraft\":[{\"flight\":\"ENY3301 \",\"track\":152.9,\"category\":\"A2\",\"lat\":33.450576,\"lon\":-86.819234,\"gs\":269.7,\"alt_baro\":16150,\"seen_pos\":0.4,\"dist\":\"2.1\",\"dist2\":\"1.5\",\"dist3\":\"1.8\",\"speed\":310,\"alt\":6200,\"arriving\":true,\"heading\":152.9,\"dir\":335,\"toa\":21}]}",
+        "payloadType": "json",
+        "x": 430,
+        "y": 560,
+        "wires": [
+            [
+                "7af20eb2.78e4f"
+            ]
+        ]
+    },
+    {
+        "id": "239442c7.945bee",
+        "type": "change",
+        "z": "9a950195.090d7",
+        "name": "pretext",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "pretext",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 910,
+        "y": 440,
+        "wires": [
+            [
+                "d5157d66.04eb"
+            ]
+        ]
+    },
+    {
+        "id": "d5157d66.04eb",
+        "type": "link out",
+        "z": "9a950195.090d7",
+        "name": "",
+        "links": [
+            "2f658ee6.05ad92"
+        ],
+        "x": 1015,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b417e685.792cb8",
+        "type": "time-range-switch",
+        "z": "9a950195.090d7",
+        "name": "day?",
+        "lat": "33.437475",
+        "lon": "-86.779897",
+        "startTime": "9:00",
+        "endTime": "dusk",
+        "startOffset": 0,
+        "endOffset": 0,
+        "x": 470,
+        "y": 380,
+        "wires": [
+            [
+                "7af20eb2.78e4f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6548d46d.a1f01c",
+        "type": "delay",
+        "z": "9a950195.090d7",
+        "name": "toa-10",
+        "pauseType": "delayv",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1230,
+        "y": 420,
+        "wires": [
+            [
+                "31525c93.c13c84"
+            ]
+        ]
+    }
+]
