@@ -1,0 +1,2271 @@
+
+// More info at: https://www.youtube.com/watch?v=7LaXALRW-KY
+
+[
+    {
+        "id": "e54a4095.b00a1",
+        "type": "tab",
+        "label": "Cameras",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "169a860a.b21b2a",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Daily reset",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "a7e0fdda.e59f5",
+            "b40390eb.f6fb8",
+            "584186f1.6c33d8",
+            "5da71ddd.8b74f4",
+            "c61c9591.340b18"
+        ],
+        "x": 594,
+        "y": 819,
+        "w": 412,
+        "h": 129.5
+    },
+    {
+        "id": "3e83432d.38570c",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Monitor incoming ftp files",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "11a194e2.19d93b",
+            "2aea1982.670656",
+            "bc03664.6a70198",
+            "4e1886d8.87aab8",
+            "cbc173a6.0092",
+            "8a159a6f.c056b8",
+            "ee57b55d.a89358",
+            "622e1080.f3f23",
+            "30bfb96.5011946",
+            "7f2e5349.2d199c",
+            "efdf436.93624c",
+            "2917f443.70455c"
+        ],
+        "x": 34,
+        "y": 39,
+        "w": 672,
+        "h": 162
+    },
+    {
+        "id": "56514136.b8c3a",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Check if cameras are online",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "38c7b536.1a6cea",
+            "19be6a20.7331e6",
+            "96fbdfdd.01524",
+            "d3c97614.f5b488",
+            "ae3070ab.75477",
+            "772f8e47.9b6c9",
+            "37e189de.c455b6"
+        ],
+        "x": 34,
+        "y": 679,
+        "w": 462,
+        "h": 122
+    },
+    {
+        "id": "6614d43e.e1038c",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Update display",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "7d4422bf.216e8c",
+            "77628784.6e1158",
+            "f8933b67.c16a58",
+            "11d416ae.bd5319",
+            "8bf0b4fe.f356f8",
+            "b6c7cb15.c051d8",
+            "39da5b3f.721794",
+            "b65ae38.84c452",
+            "46db70ca.4b73d",
+            "9ef97c21.86506",
+            "be384c54.ffd49",
+            "ef76ccc3.faee2"
+        ],
+        "x": 34,
+        "y": 499,
+        "w": 692,
+        "h": 162
+    },
+    {
+        "id": "7a711.8186c8ef8",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Set threshold",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "214ab57b.24008a",
+            "9c7e3797.1f07c8",
+            "35fa2657.1631aa",
+            "772e45bb.51973c",
+            "90c16f01.3af25",
+            "82bca74.4fddb58",
+            "62a61b78.b46394"
+        ],
+        "x": 514,
+        "y": 679,
+        "w": 572,
+        "h": 122
+    },
+    {
+        "id": "7e0cedf3.996284",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Check camera emails",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "36bed554.a6fe1a",
+            "8251d2d1.21ca2",
+            "3a58c11e.34e0ce",
+            "2e43372d.66ae98",
+            "9e9af315.63835",
+            "3c76967.3a22b6a"
+        ],
+        "x": 34,
+        "y": 819,
+        "w": 532,
+        "h": 142
+    },
+    {
+        "id": "ab5ef14f.26469",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Set debug",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "6d34fab3.ab5174",
+            "fc289c0b.b6eb6",
+            "bb9e4e7a.af4e8"
+        ],
+        "x": 954,
+        "y": 39,
+        "w": 312,
+        "h": 122
+    },
+    {
+        "id": "cedea22a.f5d14",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Score, display, and announce",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "4bd9ddb2.829914",
+            "457c911c.b828a",
+            "fffb28a1.1182d8",
+            "5f2731f.a8fc4d",
+            "ec300e2c.86211",
+            "c040bc62.aa8d7",
+            "333865dd.46fd5a",
+            "a5a23822.c108b8",
+            "3c2d6798.6c4b38",
+            "ea8fa6eb.12f3c8",
+            "22b84105.fed7ee",
+            "c3bdf2a7.16912",
+            "7c04b57e.8423ec",
+            "c8cf94d1.4f5e78",
+            "6868e019.ac98c",
+            "ac1e1213.f821b",
+            "f2466e39.537b7",
+            "4abd4e48.d4cab",
+            "60785f4.70da8a",
+            "8d42f8c8.be08b8",
+            "fa302856.7f8bb8",
+            "d934acab.b40cf"
+        ],
+        "x": 34,
+        "y": 219,
+        "w": 722,
+        "h": 262
+    },
+    {
+        "id": "e6eedfce.fde35",
+        "type": "group",
+        "z": "e54a4095.b00a1",
+        "name": "Reboot all cameras",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000",
+            "fill": "#e3f3d3"
+        },
+        "nodes": [
+            "b0d539f5.35f4c8",
+            "468cbf55.d293f",
+            "ef5a830b.b6992"
+        ],
+        "x": 954,
+        "y": 179,
+        "w": 432,
+        "h": 82
+    },
+    {
+        "id": "4bd9ddb2.829914",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "Score",
+        "func": "c = msg.topic.match(/doods_(\\S+)/)[1]\nt = global.get('camera_threshold', 'file');\nflow.set('snap_index', 1)\n\n// Raise threshold on 'busy' cameras or lower on sleepy cameras\n//if (c == 'c1') {t = 80}\n//if (c == 'c3') {t = 80}\n//if (c == 'c6') {t = 80}\n//if (c == 'c7') {t = 80}\nif (c == 'a1') {t = 60}\n\nimage = {}\nimage.payload = {\n    chatId: 123456789,\n    type: 'photo',\n    content: '/share/camera/' + c + '_latest.jpg'\n}\nimage.topic = c\n\nhs = 0;\nvalid = \"person,bicycle,car,motorcycle,bus,truck,bird,dog,horse,sheep,cow,bear,teddy bear\"\nskip  = \"house,cat\"\n\nfor (var o in msg.data.new_state.attributes.matches) {\n    if (valid.includes(o)) {\n        s  = msg.data.new_state.attributes.matches[o][0].score\n        bb = msg.data.new_state.attributes.matches[o][0].box\n        if (s > t && s > hs) {\n            skip = bbox_skip(bb, 0)\n//            if (!skip) { \n                hs = s\n                ho = o\n//            }\n        }\n    }\n}\n\nnode.status('t=' + t + ' c=' + c + ' hs=' + hs) // +' ho='+ho)\nif (hs < t) { \n    return [null, null, null]\n}\n\nrescan = {}\neid = 'image_processing.google_vision_person_' + c\nrescan.payload = {data: {entity_id: eid}}\nrescan.topic = c\n\nhs = Math.round(hs)\nbb = msg.data.new_state.attributes.matches[ho][0].box\n\n//age.payload.caption = c + ' ' + hs + ' ' + ho + ' ' + bb\nimage.payload.caption = c + ' ' + hs + ' ' + ho + ' '\n\n// This gets reset daily\nskip = bbox_skip(bb, 1)\n\n//if (c == 't1') { skip = 0 }  // debug\nif (hs == 100) { skip = 0 } // Must be a person?\n\nif (skip) {\n    node.warn('bb skip c=' + c + ' s=' + skip + ' bb=' + bb)\n//  image.payload.caption += ' \\nIGNORED: ' + skip\n    return[null, null, null]\n}\nelse {        \n    msg.topic = c\n    \n    msg.no_mus = 1 // Avoid mus tts popup, so we can see snapshots better\n    \n    t = new Date().toLocaleTimeString('en-US')\n    d = new Date().toLocaleDateString('en-US')\n    log1 = d + ' ' + t + ' ' + c + ' ' + bb + ' ' + ho\n\n    if (ho == 'person') {ho = ''}\n    msg.payload = c + ' ' + ho + ' ' + hs\n    node.status = msg.payload\n\n    dc = flow.get('dood_count') || 0\n//  let dc = flow.dood_count || 0;\n//  if (dc === undefined) {dc = 0}\n    if (++dc > 100) { dc = 1 }\n    flow.set('dood_count', dc)\n    msg.count = dc  // Used to unique-ify the video url\n//  node.warn(c + ' dc='+dc)\n\n    return [msg, image, {payload: log1}]\n}\n\nfunction bbox_skip(bb1, increment) {\n    bb2 = round_box(bb)\n    ci = c + ',' + bb2\n    bb_counts = flow.get('doods_counts', 'file') || {}\n    bb_count = bb_counts[ci] || 0\n    if (increment) {\n        bb_counts[ci] = ++bb_count\n//      node.warn('ci=' + ci + ' bbc=' + bb_count)\n        flow.set('doods_counts', bb_counts, 'file')\n    }\n    skip = (bb_count > 2) ? 1 : 0\n    return skip\n}\n\nfunction bbox_skip_old(bb1) {\n    var bbi = global.get('doods_ignore')\n    for (var o of bbi) {\n        if (c != o['col1']) {continue}\n        bb2 = o['col2'].split(',')\n        d = Math.abs(bb1[0] - bb2[0]) +\n            Math.abs(bb1[1] - bb2[1]) +\n            Math.abs(bb1[2] - bb2[2]) +\n            Math.abs(bb1[3] - bb2[3]);\n        d = Math.round(d*100)/100\n//      node.warn(c + ' d='+d+' bb1='+bb1+' bb2=' + bb2)\n        if (d < .1) {return d + ' ' + bb2}\n    }\n    return 0\n}\n\nfunction round_box(bb1) {\n    var bb2 = []\n    for (var c of bb1.toString().split(\",\")) {\n        c2 = roundit(c)\n        bb2.push(roundit(c))\n    }\n//  node.warn('bb2=' + bb2)\n    return bb2.join(',')\n}\n\nfunction roundit(x) {\n    precision = .05\n    y  = +x + precision/2;\n    y -= +y % precision;\n    return y.toFixed(2)\n}\n\n\n\n    ",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 250,
+        "y": 340,
+        "wires": [
+            [
+                "333865dd.46fd5a",
+                "6868e019.ac98c"
+            ],
+            [
+                "ac1e1213.f821b"
+            ],
+            [
+                "a5a23822.c108b8"
+            ]
+        ]
+    },
+    {
+        "id": "457c911c.b828a",
+        "type": "server-state-changed",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "doods",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "image_processing.doods_",
+        "entityidfiltertype": "substring",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 1,
+        "output_only_on_state_change": false,
+        "for": "",
+        "forType": "num",
+        "forUnits": "minutes",
+        "ignorePrevStateNull": false,
+        "ignorePrevStateUnknown": false,
+        "ignorePrevStateUnavailable": false,
+        "ignoreCurrentStateUnknown": false,
+        "ignoreCurrentStateUnavailable": false,
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "4bd9ddb2.829914"
+            ]
+        ]
+    },
+    {
+        "id": "fffb28a1.1182d8",
+        "type": "api-call-service",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "snap 1",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "camera",
+        "service": "snapshot",
+        "entityId": "camera.{{topic}}",
+        "data": "{ \"filename\" : \"/share/www/video/{{topic}}.jpg\"}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 510,
+        "y": 360,
+        "wires": [
+            [
+                "c040bc62.aa8d7",
+                "22b84105.fed7ee"
+            ]
+        ]
+    },
+    {
+        "id": "5f2731f.a8fc4d",
+        "type": "api-call-service",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "record",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "camera",
+        "service": "record",
+        "entityId": "camera.{{topic}}",
+        "data": "{ \"duration\" : 10, \"filename\" : \"/share/camera/new/{{topic}}.mp4\"}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 510,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ec300e2c.86211",
+        "type": "telegram sender",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "tg bot",
+        "bot": "441a5d01.1991f4",
+        "x": 630,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c040bc62.aa8d7",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "jpg",
+        "func": "c = msg.topic\n\n// Skip the battery cameras. This would be a duplicate photo.\nif (c == 'a1' | c == 'a2') {\n    return null\n}\n\nimage = {}\nimage.payload = {\n    chatId: 123456789,\n    type: 'photo',\n    content: '/share/www/video/' + c + '.jpg'\n}\n\nreturn image;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 630,
+        "y": 400,
+        "wires": [
+            [
+                "ac1e1213.f821b"
+            ]
+        ]
+    },
+    {
+        "id": "333865dd.46fd5a",
+        "type": "trigger",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "30 sec",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "30",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 370,
+        "y": 260,
+        "wires": [
+            [
+                "f2466e39.537b7",
+                "fffb28a1.1182d8",
+                "7c04b57e.8423ec",
+                "5f2731f.a8fc4d",
+                "d934acab.b40cf"
+            ]
+        ]
+    },
+    {
+        "id": "a5a23822.c108b8",
+        "type": "file",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "log1",
+        "filename": "/share/logs/doods.txt",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 370,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7d4422bf.216e8c",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "group": "322144c4.d29ebc",
+        "name": "Snap1",
+        "order": 4,
+        "width": 12,
+        "height": 7,
+        "format": "<div>\n<img ng-src=\"{{msg.payload}}\" height=\"360\" width=\"640\">\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 630,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c2d6798.6c4b38",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "c1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "c1",
+        "payloadType": "str",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "ea8fa6eb.12f3c8"
+            ]
+        ]
+    },
+    {
+        "id": "77628784.6e1158",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "group": "322144c4.d29ebc",
+        "name": "Snap2",
+        "order": 6,
+        "width": 12,
+        "height": 7,
+        "format": "<div>\n<img ng-src=\"{{msg.payload}}\"  width=\"100%\">\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 490,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f8933b67.c16a58",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "group": "322144c4.d29ebc",
+        "name": "SnapV",
+        "order": 8,
+        "width": 12,
+        "height": 7,
+        "format": "<div>\n     <video id=\"video\" height=\"360\" width=\"640\"></video>\n</div>\n\n<script> \n    (function(scope) {\n        // Watch for messages being send to this template node\n        scope.$watch('msg', function (msg) {      \n            if (msg) {\n                var video = document.getElementById('video');\n                video.src = msg.payload;\n                video.loop = true;\n                video.playbackRate = 5;\n                video.play();\n            }       \n         }); \n    })(scope); \n\n</script>\n\n\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 630,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ea8fa6eb.12f3c8",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "si=1",
+        "rules": [
+            {
+                "t": "set",
+                "p": "snap_index",
+                "pt": "flow",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "dood_count",
+                "pt": "flow",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "no_mus",
+                "pt": "msg",
+                "to": "1",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "333865dd.46fd5a"
+            ]
+        ]
+    },
+    {
+        "id": "11d416ae.bd5319",
+        "type": "watch",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "mp4",
+        "files": "/share/camera/new",
+        "recursive": "",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "8bf0b4fe.f356f8"
+            ]
+        ]
+    },
+    {
+        "id": "8bf0b4fe.f356f8",
+        "type": "trigger",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "1s",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "1",
+        "extend": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "outputs": 1,
+        "x": 230,
+        "y": 600,
+        "wires": [
+            [
+                "b6c7cb15.c051d8"
+            ]
+        ]
+    },
+    {
+        "id": "b6c7cb15.c051d8",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "Copy",
+        "func": "fs = global.get('fs');\nd = flow.get('dood_count') || 0\nif (++d > 99) {d = 0}\nflow.set('dood_count', d)\n\nl = msg.file.match(/(\\S+).mp4/)\nc = l[1]\n//node.warn( 'cd=' + c +  d)\n\nr = '/share/camera/'\nf = c + '_' + d + '.mp4'\n\nfs.createReadStream(msg.filename).\n    pipe(fs.createWriteStream(r + f));\n\nt = new Date().getTime()\nurl = '/camera/' + f + '?ts=' + t\nmsg.payload = url\n\nur = 'http://192.168.86.123:1880'\n//= 'https://my_site.duckdns.org:1880'\n\nmsg2 = {}\nmsg2.payload = {\n    chatId: 123456789,\n    type: 'message',\n    content: ur + url\n}\n\nvlist = global.get('video_list', 'file') || []\nvlist.unshift(ur + url);\nglobal.set('video_list', vlist.slice(0, 30), 'file');\n\nreturn [msg, msg2, {payload: vlist}]\n\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 350,
+        "y": 600,
+        "wires": [
+            [
+                "9ef97c21.86506"
+            ],
+            [
+                "ac1e1213.f821b"
+            ],
+            [
+                "ef76ccc3.faee2",
+                "be384c54.ffd49"
+            ]
+        ]
+    },
+    {
+        "id": "22b84105.fed7ee",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "snap 1",
+        "func": "t = new Date().getTime()\nc  = msg.topic\nflow.set('dood_count_snap', 0)\nmsg.payload = '/www/video/' +  c + '.jpg?ts=' + t\n\n\nreturn msg\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 630,
+        "y": 360,
+        "wires": [
+            [
+                "39da5b3f.721794",
+                "7d4422bf.216e8c"
+            ]
+        ]
+    },
+    {
+        "id": "39da5b3f.721794",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "snap 30",
+        "func": "t = new Date().getTime()\nc  = msg.topic\nsc = flow.get('dood_count_snap')\nflow.set('dood_count_snap', ++sc)\n\nif (sc < 30) {\n    msg.payload = '/www/video/' +  c + '_l.jpg?ts=' + t\n    return msg\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 360,
+        "y": 540,
+        "wires": [
+            [
+                "77628784.6e1158",
+                "46db70ca.4b73d"
+            ]
+        ]
+    },
+    {
+        "id": "b65ae38.84c452",
+        "type": "api-call-service",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "snap",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "camera",
+        "service": "snapshot",
+        "entityId": "camera.{{topic}}",
+        "data": "{ \"filename\" : \"/share/www/video/{{topic}}_l.jpg\"}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 230,
+        "y": 540,
+        "wires": [
+            [
+                "39da5b3f.721794"
+            ]
+        ]
+    },
+    {
+        "id": "46db70ca.4b73d",
+        "type": "delay",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "1 sec",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 110,
+        "y": 540,
+        "wires": [
+            [
+                "b65ae38.84c452"
+            ]
+        ]
+    },
+    {
+        "id": "9ef97c21.86506",
+        "type": "delay",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "name": "1 sec",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 490,
+        "y": 580,
+        "wires": [
+            [
+                "f8933b67.c16a58"
+            ]
+        ]
+    },
+    {
+        "id": "214ab57b.24008a",
+        "type": "ui_slider",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "Threshold",
+        "label": "CT",
+        "tooltip": "Camera Threshold",
+        "group": "cca2b5d3.af1288",
+        "order": 8,
+        "width": "3",
+        "height": "1",
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": "40",
+        "max": "80",
+        "step": "5",
+        "x": 600,
+        "y": 720,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "9c7e3797.1f07c8",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "store",
+        "rules": [
+            {
+                "t": "set",
+                "p": "#:(file)::camera_threshold",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1010,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c3bdf2a7.16912",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "group": "b7f7ebd0.55bde8",
+        "name": "SnapBBs",
+        "order": 2,
+        "width": "30",
+        "height": "50",
+        "format": "<div>\n  <img ng-src=\"{{msg.payload[0]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[1]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[2]}}\" height=\"240\" width=\"420\">\n</div>\n<div>\n  <img ng-src=\"{{msg.payload[3]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[4]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[5]}}\" height=\"240\" width=\"420\">\n</div>\n<div>\n  <img ng-src=\"{{msg.payload[6]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[7]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[8]}}\" height=\"240\" width=\"420\">\n</div>\n<div>\n  <img ng-src=\"{{msg.payload[9]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[10]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[11]}}\" height=\"240\" width=\"420\">\n</div>\n<div>\n  <img ng-src=\"{{msg.payload[12]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[13]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[14]}}\" height=\"240\" width=\"420\">\n</div>\n<div>\n  <img ng-src=\"{{msg.payload[15]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[16]}}\" height=\"240\" width=\"420\">\n  <img ng-src=\"{{msg.payload[17]}}\" height=\"240\" width=\"420\">\n</div>\n\n\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 280,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ef76ccc3.faee2",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "group": "d162cc2b.6cf5a",
+        "name": "SnapsV9",
+        "order": 1,
+        "width": "30",
+        "height": "20",
+        "format": "<div>\n     <video id='v1' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[0]}}\"></video>\n     <video id='v2' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[1]}}\"></video>\n     <video id='v3' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[2]}}\"></video>\n</div>\n<div>\n     <video id='v4' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[3]}}\"></video>\n     <video id='v5' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[4]}}\"></video>\n     <video id='v6' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[5]}}\"></video>\n</div>\n<div>\n     <video id='v7' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[6]}}\"></video>\n     <video id='v8' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[7]}}\"></video>\n     <video id='v9' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[8]}}\"></video>\n</div>\n<!-- \n<div>\n     <video id='v10' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[9]}}\"></video>\n     <video id='v11' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[10]}}\"></video>\n     <video id='v12' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[11]}}\"></video>\n</div>\n<div>\n     <video id='v13' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[12]}}\"></video>\n     <video id='v14' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[13]}}\"></video>\n     <video id='v15' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[14]}}\"></video>\n</div>\n<div>\n     <video id='v16' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[15]}}\"></video>\n     <video id='v17' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[16]}}\"></video>\n     <video id='v18' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[17]}}\"></video>\n</div>\n-->\n\n\n<script> \n                 document.getElementById('v1').playbackRate = 5;\n                 document.getElementById('v2').playbackRate = 5;\n                 document.getElementById('v3').playbackRate = 5;\n                 document.getElementById('v4').playbackRate = 5;\n                 document.getElementById('v5').playbackRate = 5;\n                 document.getElementById('v6').playbackRate = 5;\n                 document.getElementById('v7').playbackRate = 5;\n                 document.getElementById('v8').playbackRate = 5;\n                 document.getElementById('v9').playbackRate = 5;\n                 document.getElementById('v10').playbackRate = 5;\n                 document.getElementById('v11').playbackRate = 5;\n                 document.getElementById('v12').playbackRate = 5;\n                 document.getElementById('v13').playbackRate = 5;\n                 document.getElementById('v14').playbackRate = 5;\n                 document.getElementById('v15').playbackRate = 5;\n                 document.getElementById('v16').playbackRate = 5;\n                 document.getElementById('v17').playbackRate = 5;\n                 document.getElementById('v18').playbackRate = 5;\n</script>\n\n\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 640,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c04b57e.8423ec",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "Copy",
+        "func": "fs = global.get('fs');\nt  = new Date().getTime()\n\nd = flow.get('dood_count') || 0\nif (++d > 99) {d = 0}\nflow.set('dood_count', d)\n\nr  = '/share/camera/'\nf1 = msg.topic + '_latest.jpg'\nf2 = msg.topic + '_' + d + '.jpg'\n\nfs.createReadStream(r + f1).pipe(fs.createWriteStream(r + f2));\n\nf2 = '/camera/' + f2 + '?ts=' + t\n\nslist = global.get('snapshot_list', 'file') || []\nslist.unshift(f2);\nglobal.set('snapshot_list', slist.slice(0, 30), 'file');\n\nmsg.payload = f2\nreturn [msg, {payload: slist}]\n\n\n\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "c8cf94d1.4f5e78"
+            ],
+            [
+                "c3bdf2a7.16912"
+            ]
+        ]
+    },
+    {
+        "id": "c8cf94d1.4f5e78",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "group": "322144c4.d29ebc",
+        "name": "SnapBB",
+        "order": 3,
+        "width": 12,
+        "height": 7,
+        "format": "\n<!-- Sometimes tabit fails (because of nr re-deploys?\nso timeout to default page -->\n<script>\n    setTimeout(function(){\n        window.location.href='/endpoint/ui'}\n        ,2 * 60 * 1000);\n</script>\n\n<div>\n  <img ng-src=\"{{msg.payload}}\" height=\"360\" width=\"640\">\n</div>\n \n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "x": 280,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be384c54.ffd49",
+        "type": "ui_template",
+        "z": "e54a4095.b00a1",
+        "g": "6614d43e.e1038c",
+        "group": "f13e588e.083b48",
+        "name": "SnapsV4",
+        "order": 1,
+        "width": "30",
+        "height": "20",
+        "format": "<div>\n     <video id='v1' loop autoplay height=\"360\" width=\"630\" src=\"{{msg.payload[0]}}\"></video>\n     <video id='v2' loop autoplay height=\"360\" width=\"630\" src=\"{{msg.payload[1]}}\"></video>\n     <video id='v3' loop autoplay height=\"360\" width=\"630\" src=\"{{msg.payload[2]}}\"></video>\n     <video id='v4' loop autoplay height=\"360\" width=\"630\" src=\"{{msg.payload[3]}}\"></video>\n<!-- \n     <video id='v5' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[4]}}\"></video>\n     <video id='v6' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[5]}}\"></video>\n</div>\n\n<div>\n     <video id='v7' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[6]}}\"></video>\n     <video id='v8' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[7]}}\"></video>\n     <video id='v9' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[8]}}\"></video>\n</div>\n<div>\n     <video id='v10' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[9]}}\"></video>\n     <video id='v11' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[10]}}\"></video>\n     <video id='v12' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[11]}}\"></video>\n</div>\n<div>\n     <video id='v13' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[12]}}\"></video>\n     <video id='v14' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[13]}}\"></video>\n     <video id='v15' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[14]}}\"></video>\n</div>\n<div>\n     <video id='v16' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[15]}}\"></video>\n     <video id='v17' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[16]}}\"></video>\n     <video id='v18' loop autoplay height=\"240\" width=\"420\" src=\"{{msg.payload[17]}}\"></video>\n</div>\n-->\n\n\n<script> \n                 document.getElementById('v1').playbackRate = 5;\n                 document.getElementById('v2').playbackRate = 5;\n                 document.getElementById('v3').playbackRate = 5;\n                 document.getElementById('v4').playbackRate = 5;\n                 document.getElementById('v5').playbackRate = 5;\n                 document.getElementById('v6').playbackRate = 5;\n                 document.getElementById('v7').playbackRate = 5;\n                 document.getElementById('v8').playbackRate = 5;\n                 document.getElementById('v9').playbackRate = 5;\n                 document.getElementById('v10').playbackRate = 5;\n                 document.getElementById('v11').playbackRate = 5;\n                 document.getElementById('v12').playbackRate = 5;\n                 document.getElementById('v13').playbackRate = 5;\n                 document.getElementById('v14').playbackRate = 5;\n                 document.getElementById('v15').playbackRate = 5;\n                 document.getElementById('v16').playbackRate = 5;\n                 document.getElementById('v17').playbackRate = 5;\n                 document.getElementById('v18').playbackRate = 5;\n</script>\n\n\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 500,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "237d5b30.975004",
+        "type": "debug",
+        "z": "e54a4095.b00a1",
+        "name": "c3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "27186d47.6a5ff2",
+        "type": "debug",
+        "z": "e54a4095.b00a1",
+        "name": "c2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "11a194e2.19d93b",
+        "type": "watch",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "camera_ftp",
+        "files": "/share/camera_ftp",
+        "recursive": true,
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "ee57b55d.a89358"
+            ]
+        ]
+    },
+    {
+        "id": "2aea1982.670656",
+        "type": "comment",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "Notes",
+        "info": "Camera ftp to nas /mnt/share/camera_ftp\n\nThe 'watch' node returns filename 3-4 times in on sec \n\nftp uploads 3-5 files in a row, look the same?\n\nSo rather than wait on these ftp files, trigger scan as soon as a file starts to show up.\n\n",
+        "x": 530,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "bc03664.6a70198",
+        "type": "api-call-service",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "scan",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "image_processing",
+        "service": "scan",
+        "entityId": "",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 630,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4e1886d8.87aab8",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "eid",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "eid",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 80,
+        "wires": [
+            [
+                "8a159a6f.c056b8"
+            ]
+        ]
+    },
+    {
+        "id": "cbc173a6.0092",
+        "type": "trigger",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "15 sec",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "15",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "topic",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 510,
+        "y": 80,
+        "wires": [
+            [
+                "4e1886d8.87aab8"
+            ]
+        ]
+    },
+    {
+        "id": "8a159a6f.c056b8",
+        "type": "looptimer2",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "duration": "2",
+        "units": "Second",
+        "maxloops": "1",
+        "maxtimeout": "1",
+        "maxtimeoutunits": "Hour",
+        "name": "2 sec",
+        "x": 510,
+        "y": 120,
+        "wires": [
+            [
+                "bc03664.6a70198"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "38c7b536.1a6cea",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "Watchdog",
+        "rules": [
+            {
+                "t": "change",
+                "p": "topic",
+                "pt": "msg",
+                "from": "^c(\\d+)$",
+                "fromt": "re",
+                "to": "camera $1",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "timeout",
+                "pt": "msg",
+                "to": "120",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 760,
+        "wires": [
+            [
+                "19be6a20.7331e6"
+            ]
+        ]
+    },
+    {
+        "id": "19be6a20.7331e6",
+        "type": "link out",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "Watchdog",
+        "links": [
+            "68ba092f.716598"
+        ],
+        "x": 455,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "ee57b55d.a89358",
+        "type": "traffic",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "rain",
+        "property_allow": "payload",
+        "filter_allow": "rain_stop",
+        "ignore_case_allow": false,
+        "negate_allow": false,
+        "send_allow": false,
+        "property_stop": "payload",
+        "filter_stop": "rain_start",
+        "ignore_case_stop": false,
+        "negate_stop": false,
+        "send_stop": false,
+        "default_start": true,
+        "differ": false,
+        "x": 270,
+        "y": 80,
+        "wires": [
+            [
+                "efdf436.93624c"
+            ]
+        ]
+    },
+    {
+        "id": "622e1080.f3f23",
+        "type": "server-state-changed",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "Rain rate",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "exposeToHomeAssistant": false,
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "entityidfilter": "sensor.brucewinter_hourly_rain_rate_2",
+        "entityidfiltertype": "exact",
+        "outputinitially": true,
+        "state_type": "str",
+        "haltifstate": "0",
+        "halt_if_type": "num",
+        "halt_if_compare": "gt",
+        "outputs": 2,
+        "output_only_on_state_change": false,
+        "x": 260,
+        "y": 140,
+        "wires": [
+            [
+                "30bfb96.5011946"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "30bfb96.5011946",
+        "type": "trigger",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "15 min",
+        "op1": "rain_start",
+        "op2": "rain_stop",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "15",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 390,
+        "y": 140,
+        "wires": [
+            [
+                "ee57b55d.a89358"
+            ]
+        ]
+    },
+    {
+        "id": "96fbdfdd.01524",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "10 m",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "60",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 720,
+        "wires": [
+            [
+                "d3c97614.f5b488"
+            ]
+        ]
+    },
+    {
+        "id": "d3c97614.f5b488",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "Clist",
+        "func": "\n//clist = {c2: 114, c3: 115, c4: 112} \nclist = {c1: 118, c2: 114, c3: 115, c4: 112, c5: 113,  c7:121 , c9: 125, c10: 126} \n// c7:121 , c9: 124,  c6: 119}\n//c1: 118,\n\nfor (var c in clist) {\n//  node.warn(`${c} = ${clist[c]}`)\n\n    url = 'http://192.168.86.' + clist[c] + '/api.cgi?cmd=GetMdState&user=admin&password=my_secret'\n    eid = 'image_processing.doods_' + c\n\n    scan = {}\n    scan.topic = c\n    scan.eid = {data: {entity_id: eid}}\n    scan.url = url\n    node.send(scan)\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 270,
+        "y": 720,
+        "wires": [
+            [
+                "ae3070ab.75477"
+            ]
+        ]
+    },
+    {
+        "id": "ae3070ab.75477",
+        "type": "www-request",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "Status",
+        "method": "GET",
+        "ret": "obj",
+        "url": "",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 410,
+        "y": 720,
+        "wires": [
+            [
+                "772f8e47.9b6c9"
+            ]
+        ]
+    },
+    {
+        "id": "772f8e47.9b6c9",
+        "type": "switch",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "200?",
+        "property": "statusCode",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "200",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 110,
+        "y": 760,
+        "wires": [
+            [
+                "37e189de.c455b6"
+            ]
+        ]
+    },
+    {
+        "id": "37e189de.c455b6",
+        "type": "switch",
+        "z": "e54a4095.b00a1",
+        "g": "56514136.b8c3a",
+        "name": "Error?",
+        "property": "payload.0.error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 760,
+        "wires": [
+            [
+                "38c7b536.1a6cea"
+            ]
+        ]
+    },
+    {
+        "id": "b0d539f5.35f4c8",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "e6eedfce.fde35",
+        "name": "doit",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1050,
+        "y": 220,
+        "wires": [
+            [
+                "468cbf55.d293f"
+            ]
+        ]
+    },
+    {
+        "id": "a7e0fdda.e59f5",
+        "type": "exec",
+        "z": "e54a4095.b00a1",
+        "g": "169a860a.b21b2a",
+        "command": "rm -r ",
+        "addpay": true,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "rm",
+        "x": 930,
+        "y": 900,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "b40390eb.f6fb8",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "169a860a.b21b2a",
+        "name": "1 am",
+        "repeat": "",
+        "crontab": "00 01 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 690,
+        "y": 860,
+        "wires": [
+            [
+                "584186f1.6c33d8",
+                "c61c9591.340b18"
+            ]
+        ]
+    },
+    {
+        "id": "584186f1.6c33d8",
+        "type": "moment",
+        "z": "e54a4095.b00a1",
+        "g": "169a860a.b21b2a",
+        "name": "-2 d",
+        "topic": "",
+        "input": "",
+        "inputType": "date",
+        "inTz": "America/Chicago",
+        "adjAmount": "2",
+        "adjType": "days",
+        "adjDir": "subtract",
+        "format": "YYYY/MM/DD",
+        "locale": "C",
+        "output": "",
+        "outputType": "msg",
+        "outTz": "America/Chicago",
+        "x": 670,
+        "y": 900,
+        "wires": [
+            [
+                "5da71ddd.8b74f4"
+            ]
+        ]
+    },
+    {
+        "id": "5da71ddd.8b74f4",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "169a860a.b21b2a",
+        "name": "ftp files",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "'/share/camera_ftp/' & $.payload",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 900,
+        "wires": [
+            [
+                "a7e0fdda.e59f5"
+            ]
+        ]
+    },
+    {
+        "id": "36bed554.a6fe1a",
+        "type": "e-mail in",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "",
+        "protocol": "IMAP",
+        "server": "imap.gmail.com",
+        "useSSL": true,
+        "port": "993",
+        "box": "INBOX",
+        "disposition": "Read",
+        "criteria": "UNSEEN",
+        "repeat": "60",
+        "fetch": "auto",
+        "inputs": 0,
+        "x": 110,
+        "y": 860,
+        "wires": [
+            [
+                "8251d2d1.21ca2"
+            ]
+        ]
+    },
+    {
+        "id": "8251d2d1.21ca2",
+        "type": "switch",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "",
+        "property": "attachments",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 860,
+        "wires": [
+            [
+                "2e43372d.66ae98"
+            ]
+        ]
+    },
+    {
+        "id": "3a58c11e.34e0ce",
+        "type": "file",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "camera.jpg",
+        "filename": "/share/camera/a1.jpg",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 150,
+        "y": 920,
+        "wires": [
+            [
+                "3c76967.3a22b6a"
+            ]
+        ]
+    },
+    {
+        "id": "2e43372d.66ae98",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "a->p",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "attachments[0].content",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 860,
+        "wires": [
+            [
+                "3a58c11e.34e0ce",
+                "9e9af315.63835"
+            ]
+        ]
+    },
+    {
+        "id": "9e9af315.63835",
+        "type": "image",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "jpg",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "x": 470,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "3c76967.3a22b6a",
+        "type": "api-call-service",
+        "z": "e54a4095.b00a1",
+        "g": "7e0cedf3.996284",
+        "name": "scan a1",
+        "server": "e7b80243.0137c",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "image_processing",
+        "service": "scan",
+        "entityId": "image_processing.doods_a1",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 300,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "468cbf55.d293f",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "e6eedfce.fde35",
+        "name": "Clist",
+        "func": "\n//clist = {c2: 114, c3: 115, c4: 112} \nclist = {c1: 118, c2: 114, c3: 115, c4: 112, c5: 113, c6: 119, c7: 121} \n// , c9: 124}\n//c1: 118,\n\nfor (var c in clist) {\n//  node.warn(`${c} = ${clist[c]}`)\n\n    url = 'http://192.168.86.' + clist[c] + '/api.cgi?cmd=reboot&code=0&user=admin&password=bbw1958'\n    scan = {}\n    scan.topic = c\n    scan.url = url\n    node.send(scan)\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1170,
+        "y": 220,
+        "wires": [
+            [
+                "ef5a830b.b6992"
+            ]
+        ]
+    },
+    {
+        "id": "ef5a830b.b6992",
+        "type": "www-request",
+        "z": "e54a4095.b00a1",
+        "g": "e6eedfce.fde35",
+        "name": "Reboot",
+        "method": "GET",
+        "ret": "obj",
+        "url": "",
+        "follow-redirects": true,
+        "persistent-http": true,
+        "tls": "",
+        "x": 1300,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6868e019.ac98c",
+        "type": "mqtt out",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "motion",
+        "topic": "camera/motion",
+        "qos": "",
+        "retain": "",
+        "broker": "fc7b42c.5e808c",
+        "x": 370,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "7f2e5349.2d199c",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "test t1",
+        "props": [
+            {
+                "p": "filename",
+                "v": "/share/camera/t1_a.jpg",
+                "vt": "str"
+            },
+            {
+                "p": "comment",
+                "v": "NOTE: hard coded in camera.yaml",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "efdf436.93624c"
+            ]
+        ]
+    },
+    {
+        "id": "35fa2657.1631aa",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "5",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "5",
+        "payloadType": "num",
+        "x": 750,
+        "y": 720,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "772e45bb.51973c",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "65",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "65",
+        "payloadType": "num",
+        "x": 890,
+        "y": 720,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "ac1e1213.f821b",
+        "type": "switch",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "debug",
+        "property": "#:(file)::camera_debug",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 440,
+        "wires": [
+            [
+                "ec300e2c.86211"
+            ]
+        ]
+    },
+    {
+        "id": "6d34fab3.ab5174",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "ab5ef14f.26469",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 1050,
+        "y": 80,
+        "wires": [
+            [
+                "fc289c0b.b6eb6"
+            ]
+        ]
+    },
+    {
+        "id": "fc289c0b.b6eb6",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "ab5ef14f.26469",
+        "name": "debug",
+        "rules": [
+            {
+                "t": "set",
+                "p": "#:(file)::camera_debug",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bb9e4e7a.af4e8",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "ab5ef14f.26469",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 1050,
+        "y": 120,
+        "wires": [
+            [
+                "fc289c0b.b6eb6"
+            ]
+        ]
+    },
+    {
+        "id": "90c16f01.3af25",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "80",
+        "payloadType": "num",
+        "x": 610,
+        "y": 760,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "82bca74.4fddb58",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "90",
+        "payloadType": "num",
+        "x": 750,
+        "y": 760,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "f2466e39.537b7",
+        "type": "trigger",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "30 sec",
+        "op1": "",
+        "op2": "restore",
+        "op1type": "pay",
+        "op2type": "str",
+        "duration": "30",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 630,
+        "y": 300,
+        "wires": [
+            [
+                "4abd4e48.d4cab"
+            ]
+        ]
+    },
+    {
+        "id": "4abd4e48.d4cab",
+        "type": "link out",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "tabit",
+        "links": [
+            "ec547524.1ed858"
+        ],
+        "x": 715,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "60785f4.70da8a",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "c5",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "c5",
+        "payloadType": "str",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "ea8fa6eb.12f3c8"
+            ]
+        ]
+    },
+    {
+        "id": "62a61b78.b46394",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "7a711.8186c8ef8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "95",
+        "payloadType": "num",
+        "x": 890,
+        "y": 760,
+        "wires": [
+            [
+                "9c7e3797.1f07c8"
+            ]
+        ]
+    },
+    {
+        "id": "c61c9591.340b18",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "169a860a.b21b2a",
+        "name": "Reset counts",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "#:(file)::doods_counts",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 850,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8d42f8c8.be08b8",
+        "type": "link out",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "tts",
+        "links": [
+            "2f658ee6.05ad92"
+        ],
+        "x": 715,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "fa302856.7f8bb8",
+        "type": "change",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "bcell",
+        "rules": [
+            {
+                "t": "set",
+                "p": "room",
+                "pt": "msg",
+                "to": "bcell",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 260,
+        "wires": [
+            [
+                "8d42f8c8.be08b8"
+            ]
+        ]
+    },
+    {
+        "id": "d934acab.b40cf",
+        "type": "switch",
+        "z": "e54a4095.b00a1",
+        "g": "cedea22a.f5d14",
+        "name": "away?",
+        "property": "#:(file)::location_desk",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "fa302856.7f8bb8"
+            ],
+            [
+                "8d42f8c8.be08b8"
+            ]
+        ]
+    },
+    {
+        "id": "aa4230c7.be19",
+        "type": "debug",
+        "z": "e54a4095.b00a1",
+        "name": "c1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "efdf436.93624c",
+        "type": "function",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "parse",
+        "func": "\n// /share/camera_ftp/2020/02/26/c1_01_20200226150747.jpg\n\nm = msg.filename.match(/^(\\S+)\\/(\\S+?)$/)\n\nmsg.path = m[1]\nmsg.file = m[2]\n\nm = msg.file.match(/^(\\S+?)_/)\nc = m[1]\n\neid = 'image_processing.doods_' + c\n\nmsg.eid     = {data: {entity_id: eid}}\nmsg.topic   = c\nmsg.payload = c\n\nt = new Date().toLocaleTimeString('en-US')\nnode.status(c + ' ' + t)\n\nreturn msg\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "cbc173a6.0092"
+            ]
+        ]
+    },
+    {
+        "id": "2917f443.70455c",
+        "type": "inject",
+        "z": "e54a4095.b00a1",
+        "g": "3e83432d.38570c",
+        "name": "test c10",
+        "props": [
+            {
+                "p": "filename",
+                "v": "/share/camera/c10_a.jpg",
+                "vt": "str"
+            },
+            {
+                "p": "comment",
+                "v": "NOTE: not passed on, as scan re-gets image",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "str",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "efdf436.93624c"
+            ]
+        ]
+    },
+    {
+        "id": "e7b80243.0137c",
+        "type": "server",
+        "name": "HAbbw",
+        "legacy": false,
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": false,
+        "cacheJson": true
+    },
+    {
+        "id": "441a5d01.1991f4",
+        "type": "telegram bot",
+        "botname": "house_bot",
+        "usernames": "my_username",
+        "chatids": "123456789",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "322144c4.d29ebc",
+        "type": "ui_group",
+        "name": "Snapshots",
+        "tab": "88fe39f8.280828",
+        "order": 7,
+        "disp": false,
+        "width": "30",
+        "collapse": false
+    },
+    {
+        "id": "cca2b5d3.af1288",
+        "type": "ui_group",
+        "name": "Test1",
+        "tab": "80c0c3e9.ffdb8",
+        "order": 1,
+        "disp": true,
+        "width": "20",
+        "collapse": false
+    },
+    {
+        "id": "b7f7ebd0.55bde8",
+        "type": "ui_group",
+        "name": "Snaps",
+        "tab": "738f0ebb.0b9f9",
+        "order": 1,
+        "disp": false,
+        "width": "30",
+        "collapse": false
+    },
+    {
+        "id": "d162cc2b.6cf5a",
+        "type": "ui_group",
+        "name": "Vsnaps9",
+        "tab": "3d3f3674.6f77da",
+        "order": 1,
+        "disp": false,
+        "width": "30",
+        "collapse": false
+    },
+    {
+        "id": "f13e588e.083b48",
+        "type": "ui_group",
+        "name": "Vsnaps4",
+        "tab": "cef912d1.88941",
+        "order": 1,
+        "disp": false,
+        "width": "30",
+        "collapse": false
+    },
+    {
+        "id": "fc7b42c.5e808c",
+        "type": "mqtt-broker",
+        "name": "mqtt1",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "node-red",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "88fe39f8.280828",
+        "type": "ui_tab",
+        "name": "Cameras",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "80c0c3e9.ffdb8",
+        "type": "ui_tab",
+        "name": "Test",
+        "icon": "dashboard",
+        "order": 9,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "738f0ebb.0b9f9",
+        "type": "ui_tab",
+        "name": "Camera Snaps",
+        "icon": "dashboard",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "3d3f3674.6f77da",
+        "type": "ui_tab",
+        "name": "Camera Vsnaps9",
+        "icon": "dashboard",
+        "order": 7,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "cef912d1.88941",
+        "type": "ui_tab",
+        "name": "Camera Vsnaps4",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    }
+]
