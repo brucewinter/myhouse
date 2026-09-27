@@ -12,6 +12,12 @@ Reads ambient light in lux and battery level, sends the values to
 Adafruit IO feeds, then enters deep sleep to save battery. On wake the
 board resets and the script runs again from the top.
 
+Maintenance mode: when the Adafruit IO feed "maintenance" is ON, the board
+skips deep sleep and stays awake with WiFi up, so code can be updated over
+the CircuitPython web workflow (set CIRCUITPY_WEB_API_PASSWORD in
+settings.toml, then browse to http://circuitpython.local/ or the board's IP).
+Turn the feed OFF to go back to deep sleep.
+
 Required hardware:
   - Adafruit ESP32-S2 Feather (on-board LC709203F or MAX17048 monitor)
   - Adafruit VEML7700 Lux Sensor (STEMMA QT / I2C)
@@ -31,6 +37,7 @@ Required entries in settings.toml:
   CIRCUITPY_WIFI_PASSWORD = "your-wifi-password"
   ADAFRUIT_AIO_USERNAME = "your-aio-username"
   ADAFRUIT_AIO_KEY = "your-aio-key"
+  CIRCUITPY_WEB_API_PASSWORD = "your-web-password"  (for maintenance mode)
 """
 
 import time
@@ -49,7 +56,18 @@ SLEEP_INTERVAL = 300  # seconds between readings (5 minutes)
 FEED_NAME = "ambient-light"  # must match your Adafruit IO feed key
 VOLTAGE_FEED = "battery-voltage"  # Adafruit IO feed key for battery volts
 PERCENT_FEED = "battery-percent"  # Adafruit IO feed key for battery %
+MAINT_FEED = "maintenance"  # Adafruit IO toggle: ON = stay awake for updates
 BATTERY_MAH = 2000  # LC709203F only: 100, 200, 400, 500, 1000, 2000 or 3000
+
+
+def maintenance_requested(aio):
+    """True if the maintenance feed is ON. A missing feed counts as OFF."""
+    try:
+        value = str(aio.receive_data(MAINT_FEED)["value"]).strip().upper()
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"Maintenance check failed ({e}) - assuming OFF")
+        return False
+    return value in ("ON", "1", "TRUE")
 
 
 def get_battery_monitor(i2c_bus):
@@ -88,6 +106,7 @@ if battery is None:
 time.sleep(0.5)  # wait for first integration cycle to complete
 
 while True:
+    maintenance = False
     try:
         # -- Read the light sensor --
         lux = veml.lux
@@ -127,8 +146,17 @@ while True:
             io.send_data(PERCENT_FEED, round(percent, 1))
         print("Sent to Adafruit IO!")
 
+        maintenance = maintenance_requested(io)
+
     except Exception as e:  # pylint: disable=broad-except
         print(f"ERROR: {e}")
+
+    # -- Maintenance mode: stay awake so the web workflow is reachable --
+    if maintenance:
+        print("MAINTENANCE mode ON - staying awake for updates")
+        print(f"Web workflow: http://{wifi.radio.ipv4_address}/")
+        time.sleep(SLEEP_INTERVAL)
+        continue  # take another reading and re-check the toggle
 
     # -- Deep sleep (battery) or wait (USB) --
     print(f"Sleeping {SLEEP_INTERVAL} seconds...")
