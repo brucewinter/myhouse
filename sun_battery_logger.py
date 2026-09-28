@@ -60,6 +60,15 @@ MAINT_FEED = "maintenance"  # Adafruit IO toggle: ON = stay awake for updates
 BATTERY_MAH = 2000  # LC709203F only: 100, 200, 400, 500, 1000, 2000 or 3000
 
 
+def send(aio, feed, value):
+    """Send one value, reporting (not raising) errors so other feeds still go."""
+    try:
+        aio.send_data(feed, value)
+        print(f"Sent {value} to '{feed}'")
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"ERROR sending to '{feed}': {e}")
+
+
 def maintenance_requested(aio):
     """True if the maintenance feed is ON. A missing feed counts as OFF."""
     try:
@@ -140,11 +149,10 @@ while True:
             requests,
         )
 
-        io.send_data(FEED_NAME, lux)
+        send(io, FEED_NAME, lux)
         if volts is not None:
-            io.send_data(VOLTAGE_FEED, round(volts, 3))
-            io.send_data(PERCENT_FEED, round(percent, 1))
-        print("Sent to Adafruit IO!")
+            send(io, VOLTAGE_FEED, round(volts, 3))
+            send(io, PERCENT_FEED, round(percent, 1))
 
         maintenance = maintenance_requested(io)
 
