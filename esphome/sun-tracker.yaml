@@ -43,6 +43,10 @@ esphome:
     # Main wake cycle, once WiFi and everything else is up.
     - priority: -100
       then:
+        # Hold off automatic sleep for the whole cycle; the cycle ends with an
+        # explicit deep_sleep.enter. safety_sleep is the backstop if it hangs.
+        - deep_sleep.prevent: deep_sleep_ctrl
+        - script.execute: safety_sleep
         # Wait for Home Assistant. Only HA sends us the maintenance toggle
         # state, so that is the signal (the ESPHome Builder Logs viewer also
         # counts as an API client, so api.connected isn't enough).
@@ -53,12 +57,10 @@ esphome:
               lambda: return esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_UNDEFINED;
             then:
               - logger.log: "Power-up: waiting up to 5 min for Home Assistant"
-              - deep_sleep.prevent: deep_sleep_ctrl
               - wait_until:
                   condition:
                     lambda: return id(maintenance).has_state();
                   timeout: 5min
-              - deep_sleep.allow: deep_sleep_ctrl
         - wait_until:
             condition:
               lambda: return id(maintenance).has_state();
@@ -88,7 +90,7 @@ esphome:
               - deep_sleep.enter: deep_sleep_ctrl
             else:
               - logger.log: "Maintenance mode ON - staying awake"
-              - deep_sleep.prevent: deep_sleep_ctrl
+              - script.stop: safety_sleep
 
 esp32:
   board: adafruit_feather_esp32s2
@@ -116,9 +118,8 @@ captive_portal:
 deep_sleep:
   id: deep_sleep_ctrl
   sleep_duration: ${sleep_time}
-  # Safety net: sleep after 60 s even if the cycle above hangs (e.g. no HA).
-  # Skipped while maintenance mode has called deep_sleep.prevent.
-  run_duration: 60s
+  # No run_duration: each cycle ends with deep_sleep.enter, and the
+  # safety_sleep script below is the backstop if something hangs.
 
 i2c:
   sda: GPIO3
@@ -129,6 +130,20 @@ http_request:
   timeout: 10s
 
 script:
+  # Backstop: sleep 7 min after boot (5 min power-up wait + margin) unless
+  # maintenance mode is ON.
+  - id: safety_sleep
+    mode: restart
+    then:
+      - delay: 7min
+      - if:
+          condition:
+            binary_sensor.is_off: maintenance
+          then:
+            - logger.log:
+                level: WARN
+                format: "Cycle took too long - forcing deep sleep"
+            - deep_sleep.enter: deep_sleep_ctrl
   - id: send_to_adafruit_io
     mode: single
     then:
