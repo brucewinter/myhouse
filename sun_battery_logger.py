@@ -18,6 +18,11 @@ the CircuitPython web workflow (set CIRCUITPY_WEB_API_PASSWORD in
 settings.toml, then browse to http://circuitpython.local/ or the board's IP).
 Turn the feed OFF to go back to deep sleep.
 
+Home Assistant: if MQTT_BROKER is set in settings.toml, the readings are
+also published to that MQTT broker using Home Assistant MQTT discovery, so
+the light, battery voltage and battery percent sensors appear automatically
+under one "Sun Tracker" device.
+
 Required hardware:
   - Adafruit ESP32-S2 Feather (on-board LC709203F or MAX17048 monitor)
   - Adafruit VEML7700 Lux Sensor (STEMMA QT / I2C)
@@ -38,8 +43,15 @@ Required entries in settings.toml:
   ADAFRUIT_AIO_USERNAME = "your-aio-username"
   ADAFRUIT_AIO_KEY = "your-aio-key"
   CIRCUITPY_WEB_API_PASSWORD = "your-web-password"  (for maintenance mode)
+
+Optional entries in settings.toml (Home Assistant via MQTT):
+  MQTT_BROKER = "192.168.86.x"   (IP of your MQTT broker, e.g. Mosquitto)
+  MQTT_PORT = 1883
+  MQTT_USERNAME = "mqtt-user"
+  MQTT_PASSWORD = "mqtt-password"
 """
 
+import json
 import time
 from os import getenv
 
@@ -49,6 +61,7 @@ import wifi
 import adafruit_connection_manager
 import adafruit_requests
 import adafruit_veml7700
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
 from adafruit_io.adafruit_io import IO_HTTP
 
 # -- Settings --
@@ -57,6 +70,7 @@ FEED_NAME = "ambient-light"  # must match your Adafruit IO feed key
 VOLTAGE_FEED = "battery-voltage"  # Adafruit IO feed key for battery volts
 PERCENT_FEED = "battery-percent"  # Adafruit IO feed key for battery %
 MAINT_FEED = "maintenance"  # Adafruit IO toggle: ON = stay awake for updates
+HA_NODE = "sun_tracker"  # MQTT topic / device id used for Home Assistant
 BATTERY_MAH = 2000  # LC709203F only: 100, 200, 400, 500, 1000, 2000 or 3000
 
 
@@ -67,6 +81,66 @@ def send(aio, feed, value):
         print(f"Sent {value} to '{feed}'")
     except Exception as e:  # pylint: disable=broad-except
         print(f"ERROR sending to '{feed}': {e}")
+
+
+# (key in state JSON, name, device_class, unit, precision)
+HA_SENSORS = (
+    ("lux", "Light", "illuminance", "lx", 1),
+    ("voltage", "Battery Voltage", "voltage", "V", 2),
+    ("battery", "Battery", "battery", "%", 0),
+)
+
+
+def publish_to_home_assistant(pool, state):
+    """Publish readings to MQTT with Home Assistant discovery configs."""
+    broker = getenv("MQTT_BROKER")
+    if not broker:
+        return
+    uid = "".join(f"{b:02x}" for b in wifi.radio.mac_address)
+    state_topic = f"{HA_NODE}/state"
+    device = {
+        "identifiers": [f"{HA_NODE}_{uid}"],
+        "name": "Sun Tracker",
+        "manufacturer": "Adafruit",
+        "model": "ESP32-S2 Feather + VEML7700",
+    }
+    try:
+        mqtt = MQTT.MQTT(
+            broker=broker,
+            port=getenv("MQTT_PORT") or 1883,
+            username=getenv("MQTT_USERNAME"),
+            password=getenv("MQTT_PASSWORD"),
+            client_id=f"{HA_NODE}_{uid}",
+            socket_pool=pool,
+            is_ssl=False,
+        )
+        mqtt.connect()
+        # Discovery configs are retained, so HA finds the sensors even when
+        # the board is asleep. Re-sending each wake is cheap and self-healing.
+        for key, name, device_class, unit, precision in HA_SENSORS:
+            config = {
+                "name": name,
+                "unique_id": f"{HA_NODE}_{uid}_{key}",
+                "state_topic": state_topic,
+                "value_template": "{{ value_json.%s }}" % key,
+                "device_class": device_class,
+                "unit_of_measurement": unit,
+                "state_class": "measurement",
+                "suggested_display_precision": precision,
+                # Mark unavailable if we miss about three wakes in a row
+                "expire_after": SLEEP_INTERVAL * 3 + 60,
+                "device": device,
+            }
+            mqtt.publish(
+                f"homeassistant/sensor/{HA_NODE}/{key}/config",
+                json.dumps(config),
+                retain=True,
+            )
+        mqtt.publish(state_topic, json.dumps(state), retain=True)
+        mqtt.disconnect()
+        print(f"Published to MQTT {broker}: {state}")
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"ERROR publishing to MQTT: {e}")
 
 
 def maintenance_requested(aio):
@@ -153,6 +227,12 @@ while True:
         if volts is not None:
             send(io, VOLTAGE_FEED, round(volts, 3))
             send(io, PERCENT_FEED, round(percent, 1))
+
+        state = {"lux": round(lux, 1)}
+        if volts is not None:
+            state["voltage"] = round(volts, 3)
+            state["battery"] = round(percent, 1)
+        publish_to_home_assistant(pool, state)
 
         maintenance = maintenance_requested(io)
 
