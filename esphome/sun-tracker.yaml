@@ -43,8 +43,11 @@ esphome:
     # Main wake cycle, once WiFi and everything else is up.
     - priority: -100
       then:
-        # After power-up or RESET (not a timer wake), stay awake up to 5 min
-        # until Home Assistant connects, so it can be added / re-adopted.
+        # Wait for Home Assistant. Only HA sends us the maintenance toggle
+        # state, so that is the signal (the ESPHome Builder Logs viewer also
+        # counts as an API client, so api.connected isn't enough).
+        # After power-up or RESET (not a timer wake) wait up to 5 min so the
+        # device can be added / re-adopted in HA; otherwise up to 30 s.
         - if:
             condition:
               lambda: return esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_UNDEFINED;
@@ -53,24 +56,27 @@ esphome:
               - deep_sleep.prevent: deep_sleep_ctrl
               - wait_until:
                   condition:
-                    api.connected:
-                      state_subscription_only: true
+                    lambda: return id(maintenance).has_state();
                   timeout: 5min
               - deep_sleep.allow: deep_sleep_ctrl
-        # Wait for Home Assistant itself (a dashboard Logs viewer doesn't count)
         - wait_until:
             condition:
-              api.connected:
-                state_subscription_only: true
-            timeout: 20s
-        - wait_until:  # let HA send the maintenance toggle state
-            condition:
               lambda: return id(maintenance).has_state();
-            timeout: 5s
+            timeout: 30s
+        - if:
+            condition:
+              lambda: return !id(maintenance).has_state();
+            then:
+              - logger.log:
+                  level: WARN
+                  format: "Home Assistant did not connect"
         - component.update: veml
         - component.update: fuel_gauge
         - component.update: charge_rate
-        - delay: 1s
+        - wait_until:  # VEML7700 auto-gain takes a moment to report
+            condition:
+              lambda: return !isnan(id(lux).state);
+            timeout: 5s
         - script.execute: send_to_adafruit_io
         - script.wait: send_to_adafruit_io
         - delay: 2s  # let the API flush states to HA
@@ -132,15 +138,20 @@ script:
             Content-Type: application/json
             X-AIO-Key: !secret aio_key
           body: !lambda |-
-            char buf[256];
-            snprintf(buf, sizeof(buf),
-                     "{\"feeds\":["
-                     "{\"key\":\"ambient-light\",\"value\":\"%.1f\"},"
-                     "{\"key\":\"battery-voltage\",\"value\":\"%.3f\"},"
-                     "{\"key\":\"battery-percent\",\"value\":\"%.1f\"}]}",
-                     id(lux).state, id(battery_voltage).state,
-                     id(battery_level).state);
-            return std::string(buf);
+            // Only include readings we actually have (skip NaN)
+            std::string feeds;
+            auto add = [&](const char *key, float v, const char *fmt) {
+              if (isnan(v)) return;
+              char val[16];
+              snprintf(val, sizeof(val), fmt, v);
+              if (!feeds.empty()) feeds += ",";
+              feeds += std::string("{\"key\":\"") + key +
+                       "\",\"value\":\"" + val + "\"}";
+            };
+            add("ambient-light", id(lux).state, "%.1f");
+            add("battery-voltage", id(battery_voltage).state, "%.3f");
+            add("battery-percent", id(battery_level).state, "%.1f");
+            return "{\"feeds\":[" + feeds + "]}";
           on_response:
             then:
               - logger.log:
