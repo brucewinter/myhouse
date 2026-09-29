@@ -71,6 +71,7 @@ VOLTAGE_FEED = "battery-voltage"  # Adafruit IO feed key for battery volts
 PERCENT_FEED = "battery-percent"  # Adafruit IO feed key for battery %
 MAINT_FEED = "maintenance"  # Adafruit IO toggle: ON = stay awake for updates
 HA_NODE = "sun_tracker"  # MQTT topic / device id used for Home Assistant
+CHARGING_THRESHOLD = 0.5  # %/hour; above this counts as charging
 BATTERY_MAH = 2000  # LC709203F only: 100, 200, 400, 500, 1000, 2000 or 3000
 
 
@@ -83,11 +84,23 @@ def send(aio, feed, value):
         print(f"ERROR sending to '{feed}': {e}")
 
 
-# (key in state JSON, name, device_class, unit, precision)
-HA_SENSORS = (
-    ("lux", "Light", "illuminance", "lx", 1),
-    ("voltage", "Battery Voltage", "voltage", "V", 2),
-    ("battery", "Battery", "battery", "%", 0),
+# (component, key in state JSON, extra discovery config)
+HA_ENTITIES = (
+    ("sensor", "lux", {"name": "Light", "device_class": "illuminance",
+                       "unit_of_measurement": "lx",
+                       "suggested_display_precision": 1}),
+    ("sensor", "voltage", {"name": "Battery Voltage", "device_class": "voltage",
+                           "unit_of_measurement": "V",
+                           "suggested_display_precision": 2}),
+    ("sensor", "battery", {"name": "Battery", "device_class": "battery",
+                           "unit_of_measurement": "%",
+                           "suggested_display_precision": 0}),
+    ("sensor", "charge_rate", {"name": "Charge Rate", "unit_of_measurement": "%/h",
+                               "icon": "mdi:battery-charging-outline",
+                               "suggested_display_precision": 1}),
+    ("binary_sensor", "charging", {"name": "Charging",
+                                   "device_class": "battery_charging",
+                                   "payload_on": "ON", "payload_off": "OFF"}),
 )
 
 
@@ -117,22 +130,24 @@ def publish_to_home_assistant(pool, state):
         mqtt.connect()
         # Discovery configs are retained, so HA finds the sensors even when
         # the board is asleep. Re-sending each wake is cheap and self-healing.
-        for key, name, device_class, unit, precision in HA_SENSORS:
+        for component, key, extra in HA_ENTITIES:
             config = {
-                "name": name,
                 "unique_id": f"{HA_NODE}_{uid}_{key}",
                 "state_topic": state_topic,
-                "value_template": "{{ value_json.%s }}" % key,
-                "device_class": device_class,
-                "unit_of_measurement": unit,
-                "state_class": "measurement",
-                "suggested_display_precision": precision,
                 # Mark unavailable if we miss about three wakes in a row
                 "expire_after": SLEEP_INTERVAL * 3 + 60,
                 "device": device,
             }
+            if component == "sensor":
+                config["value_template"] = "{{ value_json.%s }}" % key
+                config["state_class"] = "measurement"
+            else:
+                config["value_template"] = (
+                    "{{ 'ON' if value_json.%s else 'OFF' }}" % key
+                )
+            config.update(extra)
             mqtt.publish(
-                f"homeassistant/sensor/{HA_NODE}/{key}/config",
+                f"homeassistant/{component}/{HA_NODE}/{key}/config",
                 json.dumps(config),
                 retain=True,
             )
@@ -196,12 +211,15 @@ while True:
         print(f"Light: {lux:.1f} lux")
 
         # -- Read the battery monitor --
-        volts = percent = None
+        volts = percent = rate = None
         if battery is not None:
             try:
                 volts = battery.cell_voltage
                 percent = min(battery.cell_percent, 100.0)
                 print(f"Battery: {volts:.2f} V, {percent:.1f} %")
+                rate = getattr(battery, "charge_rate", None)  # MAX17048 only
+                if rate is not None:
+                    print(f"Charge rate: {rate:+.1f} %/h")
             except Exception as e:  # pylint: disable=broad-except
                 print(f"Battery read error: {e}")
 
@@ -232,6 +250,9 @@ while True:
         if volts is not None:
             state["voltage"] = round(volts, 3)
             state["battery"] = round(percent, 1)
+        if rate is not None:
+            state["charge_rate"] = round(rate, 2)
+            state["charging"] = rate > CHARGING_THRESHOLD
         publish_to_home_assistant(pool, state)
 
         maintenance = maintenance_requested(io)
