@@ -19,7 +19,7 @@
 substitutions:
   name: sun-tracker
   friendly_name: Sun Tracker
-  sleep_time: 5min
+  sleep_time: 1min  # TODO: back to 5min once debugging is done
   aio_user: brucewinter  # Adafruit IO username
   maintenance_entity: input_boolean.sun_tracker_maintenance
 
@@ -102,6 +102,11 @@ logger:
 api:
   encryption:
     key: !secret sun_tracker_api_key
+  on_client_connected:
+    - logger.log:
+        level: INFO
+        format: "API client connected: %s (%s)"
+        args: ["client_info.c_str()", "client_address.c_str()"]
 
 ota:
   - platform: esphome
