@@ -107,7 +107,7 @@ def publish_to_home_assistant(pool, state):
     try:
         mqtt = MQTT.MQTT(
             broker=broker,
-            port=getenv("MQTT_PORT") or 1883,
+            port=int(getenv("MQTT_PORT") or 1883),
             username=getenv("MQTT_USERNAME"),
             password=getenv("MQTT_PASSWORD"),
             client_id=f"{HA_NODE}_{uid}",
