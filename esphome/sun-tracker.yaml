@@ -19,7 +19,7 @@
 substitutions:
   name: sun-tracker
   friendly_name: Sun Tracker
-  sleep_time: 5min
+  sleep_time: 1min  # TODO: back to 5min once debugging is done
   aio_user: brucewinter  # Adafruit IO username
   maintenance_entity: input_boolean.sun_tracker_maintenance
 
@@ -47,9 +47,9 @@ esphome:
         # explicit deep_sleep.enter. safety_sleep is the backstop if it hangs.
         - deep_sleep.prevent: deep_sleep_ctrl
         - script.execute: safety_sleep
-        # Wait for Home Assistant. Only HA sends us the maintenance toggle
-        # state, so that is the signal (the ESPHome Builder Logs viewer also
-        # counts as an API client, so api.connected isn't enough).
+        # Wait for Home Assistant itself. The ESPHome Builder Logs viewer also
+        # counts for api.connected, so the api on_client_connected hook below
+        # sets ha_connected only for a client named "Home Assistant ...".
         # After power-up or RESET (not a timer wake) wait up to 5 min so the
         # device can be added / re-adopted in HA; otherwise up to 30 s.
         - if:
@@ -59,19 +59,31 @@ esphome:
               - logger.log: "Power-up: waiting up to 5 min for Home Assistant"
               - wait_until:
                   condition:
-                    lambda: return id(maintenance).has_state();
+                    lambda: return id(ha_connected);
                   timeout: 5min
         - wait_until:
             condition:
-              lambda: return id(maintenance).has_state();
+              lambda: return id(ha_connected);
             timeout: 30s
         - if:
             condition:
-              lambda: return !id(maintenance).has_state();
+              lambda: return !id(ha_connected);
             then:
               - logger.log:
                   level: WARN
                   format: "Home Assistant did not connect"
+            else:
+              - wait_until:  # HA sends the maintenance toggle right after connecting
+                  condition:
+                    lambda: return id(maintenance).has_state();
+                  timeout: 3s
+              - if:
+                  condition:
+                    lambda: return !id(maintenance).has_state();
+                  then:
+                    - logger.log:
+                        level: WARN
+                        format: "No state for ${maintenance_entity} - does the helper exist in HA?"
         - component.update: veml
         - component.update: fuel_gauge
         - component.update: charge_rate
@@ -107,6 +119,14 @@ api:
         level: INFO
         format: "API client connected: %s (%s)"
         args: ["client_info.c_str()", "client_address.c_str()"]
+    - lambda: |-
+        if (strncmp(client_info.c_str(), "Home Assistant", 14) == 0)
+          id(ha_connected) = true;
+
+globals:
+  - id: ha_connected
+    type: bool
+    initial_value: "false"
 
 ota:
   - platform: esphome
