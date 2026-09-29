@@ -1,0 +1,199 @@
+# Sun Tracker -- Adafruit ESP32-S2 Feather + VEML7700, ESPHome version
+#
+# ESPHome port of sun_battery_logger.py (CircuitPython). On each wake it:
+#   1. powers the STEMMA QT port and reads light (VEML7700) and battery
+#      (on-board MAX17048: voltage, percent, charge rate, charging)
+#   2. reports to Home Assistant over the native API
+#   3. posts the same values to Adafruit IO (optional, see aio_* below)
+#   4. deep sleeps for 5 minutes
+#
+# Maintenance / OTA: create a Toggle helper in Home Assistant named
+# "Sun Tracker Maintenance" (input_boolean.sun_tracker_maintenance). While it
+# is ON the board stays awake so you can Install / view Logs wirelessly from
+# the ESPHome dashboard. Turn it OFF and the board goes straight to sleep.
+#
+# Needs in your ESPHome secrets.yaml:
+#   wifi_ssid, wifi_password, sun_tracker_api_key, sun_tracker_ota_password,
+#   aio_key  (Adafruit IO key)
+
+substitutions:
+  name: sun-tracker
+  friendly_name: Sun Tracker
+  sleep_time: 5min
+  aio_user: brucewinter  # Adafruit IO username
+  maintenance_entity: input_boolean.sun_tracker_maintenance
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  on_boot:
+    # Power the STEMMA QT / I2C port before the I2C bus and sensors start.
+    # The enable polarity differs between board revisions; like Adafruit's
+    # own code, read the pin's resting level and drive the opposite.
+    - priority: 1100
+      then:
+        - lambda: |-
+            gpio_reset_pin(GPIO_NUM_7);
+            gpio_set_direction(GPIO_NUM_7, GPIO_MODE_INPUT);
+            delay(1);
+            int rest = gpio_get_level(GPIO_NUM_7);
+            gpio_set_direction(GPIO_NUM_7, GPIO_MODE_OUTPUT);
+            gpio_set_level(GPIO_NUM_7, !rest);
+            delay(10);
+    # Main wake cycle, once WiFi and everything else is up.
+    - priority: -100
+      then:
+        - wait_until:
+            condition: api.connected
+            timeout: 20s
+        - wait_until:  # let HA send the maintenance toggle state
+            condition:
+              lambda: return id(maintenance).has_state();
+            timeout: 5s
+        - component.update: veml
+        - component.update: fuel_gauge
+        - component.update: charge_rate
+        - delay: 1s
+        - script.execute: send_to_adafruit_io
+        - script.wait: send_to_adafruit_io
+        - delay: 2s  # let the API flush states to HA
+        - if:
+            condition:
+              binary_sensor.is_off: maintenance
+            then:
+              - logger.log: "Cycle done - deep sleeping"
+              - deep_sleep.enter: deep_sleep_ctrl
+            else:
+              - logger.log: "Maintenance mode ON - staying awake"
+              - deep_sleep.prevent: deep_sleep_ctrl
+
+esp32:
+  board: adafruit_feather_esp32s2
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: !secret sun_tracker_api_key
+
+ota:
+  - platform: esphome
+    password: !secret sun_tracker_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true  # skip the scan, saves awake time on battery
+  ap:  # fallback hotspot if WiFi fails
+
+captive_portal:
+
+deep_sleep:
+  id: deep_sleep_ctrl
+  sleep_duration: ${sleep_time}
+  # Safety net: sleep after 60 s even if the cycle above hangs (e.g. no HA).
+  # Skipped while maintenance mode has called deep_sleep.prevent.
+  run_duration: 60s
+
+i2c:
+  sda: GPIO3
+  scl: GPIO4
+  scan: false
+
+http_request:
+  timeout: 10s
+
+script:
+  - id: send_to_adafruit_io
+    mode: single
+    then:
+      - http_request.post:
+          url: https://io.adafruit.com/api/v2/${aio_user}/groups/default/data
+          request_headers:
+            Content-Type: application/json
+            X-AIO-Key: !secret aio_key
+          body: !lambda |-
+            char buf[256];
+            snprintf(buf, sizeof(buf),
+                     "{\"feeds\":["
+                     "{\"key\":\"ambient-light\",\"value\":\"%.1f\"},"
+                     "{\"key\":\"battery-voltage\",\"value\":\"%.3f\"},"
+                     "{\"key\":\"battery-percent\",\"value\":\"%.1f\"}]}",
+                     id(lux).state, id(battery_voltage).state,
+                     id(battery_level).state);
+            return std::string(buf);
+          on_response:
+            then:
+              - logger.log:
+                  format: "Adafruit IO response: %d"
+                  args: [response->status_code]
+          on_error:
+            then:
+              - logger.log: "Adafruit IO request failed"
+
+sensor:
+  - platform: veml7700
+    id: veml
+    update_interval: never  # read once per wake from on_boot
+    ambient_light:
+      id: lux
+      name: Light
+
+  - platform: max17043  # also works with the MAX17048 on this board
+    id: fuel_gauge
+    address: 0x36
+    update_interval: never
+    battery_voltage:
+      id: battery_voltage
+      name: Battery Voltage
+      entity_category: ""
+      accuracy_decimals: 2
+    battery_level:
+      id: battery_level
+      name: Battery
+      entity_category: ""
+      accuracy_decimals: 0
+      filters:
+        - clamp:
+            max_value: 100
+
+  # MAX17048 CRATE register: signed, 0.208 %/hour per bit
+  - platform: template
+    id: charge_rate
+    name: Charge Rate
+    unit_of_measurement: "%/h"
+    icon: mdi:battery-charging-outline
+    state_class: measurement
+    accuracy_decimals: 1
+    update_interval: never
+    lambda: |-
+      uint16_t raw;
+      if (!id(fuel_gauge).read_byte_16(0x16, &raw))
+        return {};
+      return (int16_t) raw * 0.208f;
+
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 10s
+
+binary_sensor:
+  - platform: template
+    name: Charging
+    device_class: battery_charging
+    lambda: |-
+      if (isnan(id(charge_rate).state))
+        return {};
+      return id(charge_rate).state > 0.5f;
+
+  - platform: homeassistant
+    id: maintenance
+    entity_id: ${maintenance_entity}
+    on_press:
+      - logger.log: "Maintenance ON - preventing deep sleep"
+      - deep_sleep.prevent: deep_sleep_ctrl
+    on_release:
+      - logger.log: "Maintenance OFF - going to sleep"
+      - deep_sleep.allow: deep_sleep_ctrl
+      - deep_sleep.enter: deep_sleep_ctrl
