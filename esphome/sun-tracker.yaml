@@ -19,7 +19,7 @@
 substitutions:
   name: sun-tracker
   friendly_name: Sun Tracker
-  sleep_time: 1min  # TODO: back to 5min once debugging is done
+  sleep_time: 5min
   aio_user: brucewinter  # Adafruit IO username
   maintenance_entity: input_boolean.sun_tracker_maintenance
 
