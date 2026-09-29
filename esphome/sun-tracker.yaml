@@ -43,8 +43,25 @@ esphome:
     # Main wake cycle, once WiFi and everything else is up.
     - priority: -100
       then:
+        # After power-up or RESET (not a timer wake), stay awake up to 5 min
+        # until Home Assistant connects, so it can be added / re-adopted.
+        - if:
+            condition:
+              lambda: return esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_UNDEFINED;
+            then:
+              - logger.log: "Power-up: waiting up to 5 min for Home Assistant"
+              - deep_sleep.prevent: deep_sleep_ctrl
+              - wait_until:
+                  condition:
+                    api.connected:
+                      state_subscription_only: true
+                  timeout: 5min
+              - deep_sleep.allow: deep_sleep_ctrl
+        # Wait for Home Assistant itself (a dashboard Logs viewer doesn't count)
         - wait_until:
-            condition: api.connected
+            condition:
+              api.connected:
+                state_subscription_only: true
             timeout: 20s
         - wait_until:  # let HA send the maintenance toggle state
             condition:
